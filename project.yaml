@@ -1,0 +1,41 @@
+# Card metadata consumed by https://designmolecule.com
+name: SleeveDrift
+slug: sleevedrift
+repo: BoujeeEnjinia1701/sleevedrift         # GitHub repository, shown on every drawing and render
+area: Situational field hardware
+trl: 3                   # Technology Readiness Level, see .kit/STANDARDS.md section 9
+trl_target: 3
+design_state: constructable   # STANDARDS section 18; made constructable 2026-10-03 (SVD-DDR-002)
+trl_evidence:
+  - docs/01-problem.md
+  - docs/02-concept.md
+  - docs/03-requirements.md
+  - docs/decisions/0001-trl2-review-decisions.md
+  - docs/decisions/0002-design-for-construction.md
+  - docs/04-calcs/01-sizing.md
+  - docs/04-calcs/sizing.py
+  - cad/src/model.py
+  - cad/step/sleevedrift-assembly.step
+  - cad/step/sleevedrift-ring.step
+  - cad/step/sleevedrift-station.step
+  - cad/drawings/SVD-DWG-001.svg
+  - cad/drawings/SVD-DWG-001.pdf
+  - cad/drawings/SVD-DWG-002.svg
+  - bom/bom.csv
+  - docs/05-build-plan.md
+  - docs/06-design-decisions.md
+  - docs/05-build-plan/overview.png
+  - cad/src/build_plan_media.py
+  - cad/src/product_model.py
+shortlisted: false
+pitch: >-
+  Equips hand-mining crews inside rescue pipes with a hooded ring, rope-loop sledges and air.
+problem: >-
+  When machines fail during a tunnel collapse rescue, crews may have to dig by hand inside a narrow rescue pipe. At Silkyara they did it with hand tools, a trolley and a blower; there is no open, tested kit for protecting the digger at the face, moving spoil out and keeping air in the pipe.
+budget_usd: 5000
+difficulty: 4  # 1 easiest, 5 hardest
+hero_image: media/hero.png
+licenses:
+  hardware: CERN-OHL-S-2.0
+  software: MIT
+tags: [open-hardware, tunnel-rescue, confined-space, hand-mining, collapse-rescue, situational-hardware]
