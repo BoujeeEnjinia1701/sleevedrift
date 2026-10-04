@@ -37,7 +37,7 @@ COL = {"bottom": "#0F766E", "side_p": "#14B8A6", "side_m": "#14B8A6", "crown": "
        "lamp": "#FACC15", "sledges": "#2563EB", "runners": "#94A3B8", "links": "#111827", "swivels": "#DC2626",
        "ropes": "#E11D48", "trestles": "#0E7490", "ties": "#155E75", "winches": "#6B7280", "bins": "#F97316",
        "sling": "#FB923C", "blower": "#CA8A04", "duct": "#65A30D", "hangers": "#374151", "cable": "#111827",
-       "stretcher": "#EA580C", "spreader": "#7C2D12", "bridle": "#E11D48", "pipe": "#D1D5DB"}
+       "stretcher": "#EA580C", "spreader": "#7C2D12", "bridle": "#E11D48", "pipe": "#D1D5DB", "drills": "#16A34A"}
 
 
 def part(name, shape, key, explode=(0, 0, 0)):
@@ -71,6 +71,7 @@ def overview():
         ("Face return sheave, bought", R["sheave"], "sheave", (800, 0, 0)),
         ("Sledge runners, bought strip", SL["runners"], "runners", (-500, sy, -150)),
         ("Self-tailing winches (2), bought", ST["winches"], "winches", (1400, ty, 500)),
+        ("Portal drill drives (2), bought", ST["drills"], "drills", (1400, ty, 800)),
         ("Roll-up stretcher, bought", CP["stretcher"], "stretcher", (-1200, cy, 0)),
     ]
     parts = [part(n, s, k, e) for n, s, k, e in items]
@@ -238,8 +239,9 @@ def joints():
     yA = P["winch_y"][0]
     r7 = (xw - 200, xw + 200, yA - 260, yA + 260, 480, 1000)
     bv.joint([part("Trestle top rails and plate", crop(ST["trestles"], *r7), "trestles"),
-              part("Self-tailing winch and handle", crop(ST["winches"], *r7), "winches")],
-             OUT / "joint-07.png", "Joint 7: winch on its trestle", "Winch base bolted through the 10 mm top plate with its own bolts", elev=22, azim=-55)
+              part("Self-tailing winch", crop(ST["winches"], *r7), "winches"),
+              part("Drill drive on the winch socket", crop(ST["drills"], xw - 450, xw + 200, yA - 260, yA + 260, 480, 1000), "drills")],
+             OUT / "joint-07.png", "Joint 7: winch on its trestle, drill drive on the socket", "Winch base bolted through the 10 mm top plate; winch bit in the handle socket", elev=22, azim=-55)
     # 8 anchor eye and sling
     x0 = -P["trestle"][0]
     r8 = (x0 - 300, x0 + 60, yA - 60, yA + 60, 480, 760)
@@ -266,14 +268,15 @@ def steps():
     tB = part("Trestle B", trestle_shape(P, 0.0, yB), "trestles")
     ties = part("Cross ties (4)", ST["ties"], "ties")
     win = part("Self-tailing winches", ST["winches"], "winches")
+    drl = part("Portal drill drives", ST["drills"], "drills")
     sl = part("Round slings and shackles", ST["sling"], "sling")
     bins = part("Rope bins", ST["bins"], "bins")
     mv = lambda p, e: Part(p.name, p.shape, p.color, None, e)  # noqa: E731
     shot([tA], [mv(tB, (0, 400, 0)), mv(ties, (0, 0, 300))], "Step 1: set the trestles and bolt the cross ties",
          "On level ground 5.5 m behind the pipe mouth, in line with it; M10 bolts")
-    shot([tA, tB, ties], [mv(win, (0, 0, 300))], "Step 2: bolt the winches to the top plates",
-         "Winch A (pull rope) on the -Y trestle, winch B (tail rope) on the +Y trestle")
-    shot([tA, tB, ties, win], [mv(sl, (-300, 0, 0)), mv(bins, (0, 0, 300))], "Step 3: slings to the structural anchor; rope bins out",
+    shot([tA, tB, ties], [mv(win, (0, 0, 300)), mv(drl, (0, 0, 550))], "Step 2: bolt the winches to the top plates; drill drives on the sockets",
+         "Winch A (pull rope) on -Y, winch B (tail rope) on +Y; winch bits in the handle sockets, high gear")
+    shot([tA, tB, ties, win, drl], [mv(sl, (-300, 0, 0)), mv(bins, (0, 0, 300))], "Step 3: slings to the structural anchor; rope bins out",
          "Slings level at rope height, tight; never to the pipe-pushing machine")
     pipe = ctx_pipe()
     bot, sp, sm, cr = (part("Bottom segment", R["bottom"], "bottom"), part("Side segment (+Y)", R["side_p"], "side_p"),

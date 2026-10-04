@@ -3,7 +3,7 @@ doc_id: SVD-CAL-001
 title: SleeveDrift sizing calculations
 project: SleeveDrift
 doc_type: Calculation
-version: "0.1"
+version: "0.2"
 status: Draft
 date: '2026-10-03'
 author: Amish Chadha
@@ -13,11 +13,15 @@ revisions:
   date: '2026-10-03'
   author: Amish Chadha
   change: First issue for TRL 3 on the constructable design (SVD-DDR-002); fit, hood, haul forces, overload limit, output, casualty, air, set-up, durability, packages, cost
+- version: "0.2"
+  date: '2026-10-03'
+  author: Amish Chadha
+  change: 'Re-run with Amish''s round 2 decisions (SVD-DDR-003): portal drill drive on each winch socket with hand cranking as the fallback, shift rope inspection with a spare set, 600 mm stretch kept open; drill clutch torque added'
 ---
 
 # SleeveDrift sizing calculations
 
-On paper SleeveDrift does what it was drawn for except move spoil fast enough. Every piece passes along a 780 mm pipe bore, the heaviest weighs 31 kg, the hood carries 5 kN at 5.5 MPa with under 0.1 mm of deflection, the portal crew turns the winch with 92 N at most, the rope keeps a factor of 6.5 on the 2.5 kN breakaway load, the blower delivers about 15 m³/min at the face, a casualty comes out in about 3.5 minutes, and the kit is set up in about 1.6 hours. The miss is output: one person cranking at a sustainable 60 W moves the loaded train at 3.9 m/min, so a 120 L train takes 32.7 minutes a round trip and the haul carries about 0.22 m³ an hour against R3's 1 m³. Dragging sledges 60 m is expensive in energy, and hand power sets the limit; gearing does not change it. Rope wear over a 72-hour shift (R9) cannot be settled on paper. Every number below is printed by `docs/04-calcs/sizing.py`; the tag in brackets, for example [C3], is the line of the script's output that carries it.
+On paper SleeveDrift does what it was drawn for except move spoil fast enough. Every piece passes along a 780 mm pipe bore, the heaviest weighs 31 kg, the hood carries 5 kN at 5.5 MPa with under 0.1 mm of deflection, the portal crew turns the winch with 92 N at most, the rope keeps a factor of 6.5 on the 2.5 kN breakaway load, the blower delivers about 15 m³/min at the face, a casualty comes out in about 3.5 minutes, and the kit is set up in about 1.6 hours. The miss is output. By hand, one person cranking at a sustainable 60 W moves the loaded train at 3.9 m/min and the haul carries about 0.22 m³ an hour; with the portal drill drive Amish chose on 2026-10-03 (SVD-DDR-003), a drill on each winch socket moves it at 14.5 m/min and the haul carries about 0.42 m³ an hour, past the hand-dug face rate but still short of R3's 1 m³. Hand cranking stays as the fallback. Rope wear over a 72-hour shift (R9) cannot be settled on paper; the ropes are inspected every shift and a spare set is carried. The 600 mm stretch of R1 is kept open until the co-design partner answers. Every number below is printed by `docs/04-calcs/sizing.py`; the tag in brackets, for example [C3], is the line of the script's output that carries it.
 
 > **Safety:** SleeveDrift is rescue equipment for people working inside a pipe under collapse debris, with ropes under tension and a hand-wound haul. These are first-principles estimates for a paper proof of concept; they do not show that any part is safe. The hood, sheave bracket, ring fixing and anchors must be load tested before use (SVD-BLD-001, section 6), the breakaway swivels must never be bypassed, and nobody is on a rope line or near the sheave while the train moves. See SVD-PRC-001, Safety.
 
@@ -38,6 +42,7 @@ The design case is a 60 m rescue pipe of 800 mm outside diameter and 10 mm wall,
 | Sliding | UHMW-PE runners on a gritty steel floor: friction 0.30 sliding, 0.40 starting; rope on the floor 0.50 | Conservative for dry grit; confirm in trial |
 | Winches | Two-speed self-tailing, power ratios 13 and 40 with a 250 mm handle, efficiency 0.85 | Typical size 40 class; confirm with the winch bought |
 | People | One person cranking sustains 60 W; handle at 60 rpm light; hand-over-hand hauling 0.4 m/s | Ergonomics ranges for shift work |
+| Drill drive | Heavy right-angle drill with a winch bit, 120 rpm at the socket under load, high gear; adjustable slip clutch; two sets with batteries and a charger about 7 kg | Estimate; confirm with the drill bought |
 | Crew times | Tipping a sledge 1.0 min (two people); loading 30 L/min; signals 1.0 min a cycle | Estimates; measure at TRL 4 |
 | Return tension | 50 N held on the easing winch | Enough to keep the return leg from snagging |
 | Steel | S355, E = 205 GPa | |
@@ -48,7 +53,7 @@ The design case is a 60 m rescue pipe of 800 mm outside diameter and 10 mm wall,
 
 The ring rests on the pipe invert, so the 20 mm diametral clearance is all at the crown [A1]. With the jacking pads screwed back against the shell, every segment fits a 776 mm circle; the sledge is 300 mm wide and 158 mm high; the rolled stretcher is about 480 mm. The largest single piece is the crown segment: chord 658 mm, rise 190 mm, 31.0 kg [A2]. It rides in on a sledge.
 
-With the duct on the upper +Y wall and the return rope on the floor, the largest clear circle left for a crawling person is 554 mm, against 780 mm in the empty pipe [A3]. Inside the ring the clear height is 750 mm [A4]. The 600 mm stretch of R1 has not been designed; the sizes are parameters in the model, but the crawl space in a 600 mm pipe needs its own layout [A5]. R1 is met for the 800 mm pipe and at risk for the 600 mm stretch.
+With the duct on the upper +Y wall and the return rope on the floor, the largest clear circle left for a crawling person is 554 mm, against 780 mm in the empty pipe [A3]. Inside the ring the clear height is 750 mm [A4]. The 600 mm stretch of R1 has not been designed; the sizes are parameters in the model, but the crawl space in a 600 mm pipe needs its own layout. Amish decided on 2026-10-03 to keep it as a stretch until the co-design partner says whether 600 mm pipes are used for rescue (SVD-DDR-003) [A5]. R1 is met for the 800 mm pipe; the 600 mm stretch is open, pending the partner.
 
 ## B. Hood (R2)
 
@@ -75,19 +80,20 @@ At the portal, the rope rises 634 mm over 5.5 m to the winch drums: 6.6 degrees,
 
 ## D. Output (R3)
 
-By hand the loaded train moves at 3.9 m/min (60 W at the handle) and the empty train at 7.2 m/min (handle at 60 rpm) [D1]. A cycle is 15.4 min out, 4.0 min unloading, 8.3 min back in, 4.0 min loading and 1.0 min of signals: 32.7 min for 120 L, or **0.22 m³/h** [D2]. R3 is not met.
+The haul is driven by a portal drill drive on each winch socket, with hand cranking as the fallback (SVD-DDR-003, decision 1B). By hand the loaded train moves at 3.9 m/min (60 W at the handle) and the empty train at 7.2 m/min (handle at 60 rpm) [D1]. A hand cycle is 15.4 min out, 4.0 min unloading, 8.3 min back in, 4.0 min loading and 1.0 min of signals: 32.7 min for 120 L, or 0.22 m³/h [D2].
 
 For comparison, the Silkyara hand miners advanced about 10 m in under 24 hours through a 0.8 m bore; bulked, that is about 0.27 m³/h of loose spoil [D3]. The hand haul is slower than that face.
 
-*Table 3. Output options (estimates).*
+With a heavy right-angle drill and a winch bit in each winch's handle socket at 120 rpm in high gear, the train moves at 14.5 m/min both ways, 190 W at the rope when loaded; a cycle is 17.3 min and the haul carries **0.42 m³/h**, 1.9 times the hand rate and 1.5 times the hand-dug face rate, so the face rather than the haul sets the pace [D4]. **R3 is not met** against 1 m³/h: loading and unloading dominate once the haul is powered. The option not chosen, six sledges with two people tipping and spoil pre-bagged, would reach 0.71 m³/h with a 1,135 N loaded pull [D5].
 
-| Option | What changes | Cycle | Output |
+*Table 3. Output by drive (estimates).*
+
+| Drive | What it is | Cycle | Output |
 | --- | --- | --- | --- |
-| A. As designed | Hand cranking only | 32.7 min | 0.22 m³/h [D2] |
-| B. Portal drill drive | A right-angle drill with a winch bit on each winch, 120 rpm at the socket: 14.5 m/min, 190 W at the rope | 17.3 min | 0.42 m³/h [D4] |
-| C. B plus a longer train | Six sledges, two people tipping, spoil pre-bagged at the face; pull 1,135 N | 15.3 min | 0.71 m³/h [D5] |
+| Portal drill drive (design) | A right-angle drill with a winch bit on each winch socket, 120 rpm, high gear: 14.5 m/min, 190 W at the rope | 17.3 min | 0.42 m³/h [D4] |
+| Hand cranking (fallback) | One person at 60 W in high gear | 32.7 min | 0.22 m³/h [D2] |
 
-None of the options reaches R3 on paper. Loading and unloading dominate once the haul is powered. The options are set out as a decision for Amish in `docs/REVIEW.md`.
+The drill's slip clutch must let go before the breakaway swivel. At the winch socket the haul needs 18 N m loaded and 23 N m to start in high gear, and the 2.5 kN release corresponds to 57 N m; in low gear the release corresponds to only 18 N m. A clutch set between about 28 and 45 N m therefore slips before the swivel releases in high gear only; in low gear the swivel stays the limit, as it is for hand cranking [D6]. The drill is used in high gear.
 
 ## E. Casualty evacuation (R6)
 
@@ -116,7 +122,7 @@ The total is 96 min, about 1.6 h, with the duct and cable hung in parallel by a 
 
 ## H. Durability (R9)
 
-At the hand rate, 72 hours is about 132 round trips, and each metre of rope in the pipe drags about 32 km over the floor [H1]. The sledge runners slide about 16 km and lose about 1.6 mm of their 10 mm at an assumed 0.1 mm/km [H2]. Rope abrasion on gritty steel over that distance cannot be predicted on paper, so R9 is at risk [H3]. The sheave, pins and sledges are lightly loaded.
+At the drill-drive rate, 72 hours is about 250 round trips (132 by hand), and each metre of rope in the pipe drags about 60 km over the floor [H1]. The sledge runners slide about 30 km and lose about 3.0 mm of their 10 mm at an assumed 0.1 mm/km [H2]. Rope abrasion on gritty steel over that distance cannot be predicted on paper, so **R9 is at risk on paper**. As Amish decided (SVD-DDR-003, decision 2A), both ropes are inspected at every shift change against a wear gauge and a spare set is carried, so a worn rope is swapped in about 20 min; R9 is met in practice if that swap counts as maintenance. The TRL 4 endurance trial decides whether an abrasion-resistant rope is needed [H3]. The sheave, pins and sledges are lightly loaded.
 
 ## I. Packages (R10)
 
@@ -131,16 +137,18 @@ At the hand rate, 72 hours is about 132 round trips, and each metre of rope in t
 | Winches (2), handles, ties | 22.0 |
 | Sledges (4, nested), links, swivels | 34.8 |
 | Ropes (215 m) | 15.0 |
+| Spare ropes (215 m) and wear gauge | 15.0 |
+| Portal drill drives (2), bits, batteries, charger (estimate) | 7.0 |
 | Blower | 20.0 |
 | Duct (65 m) | 26.0 |
 | Stretcher, spreader, monitors, phones, lamps | 29.1 |
 | Tools, spigot, jacks, bolts, hangers | 26.0 |
 
-The kit is about 304 kg in 12 packages; the heaviest is 34.8 kg, so R10 is met [I2].
+The kit is about 326 kg in 14 packages (304 kg in 12 before the spare ropes and drill drives); the heaviest is 34.8 kg, so R10 is met [I2].
 
 ## J. Cost
 
-Value-engineering target: USD 5,000. Estimated cost of the constructable design: USD 9,867.50 (USD 4,867.50 over the target) [J1]. The largest lines are the two self-tailing winches (USD 2,300), the four-gas monitors (USD 1,100), the signal line (USD 860), the duct (USD 765) and the blower (USD 750) [J2].
+Value-engineering target: USD 5,000. Estimated cost of the constructable design: USD 10,804.00 (USD 5,804.00 over the target), USD 936.50 more than before the round 2 decisions for the two drill drives (USD 700) and the spare rope set (USD 236.50) [J1]. The largest lines are the two self-tailing winches (USD 2,300), the four-gas monitors (USD 1,100), the signal line (USD 860), the duct (USD 765) and the blower (USD 750) [J2].
 
 ## Results
 
@@ -148,15 +156,15 @@ Value-engineering target: USD 5,000. Estimated cost of the constructable design:
 
 | ID | Result | Status |
 | --- | --- | --- |
-| R1 | Every piece passes a 776 mm circle in a 780 mm bore; 600 mm variant not designed | Met for 800 mm; at risk for the 600 mm stretch |
+| R1 | Every piece passes a 776 mm circle in a 780 mm bore; 600 mm variant not designed, kept open pending the co-design partner | Met for 800 mm; 600 mm stretch open |
 | R2 | 5.5 MPa, 0.01 mm at 5 kN | Met on paper |
-| R3 | 0.22 m³/h by hand | **Not met** |
+| R3 | 0.42 m³/h with the portal drill drive; 0.22 m³/h by hand (fallback) | **Not met** |
 | R4 | 92 N starting in high gear | Met on paper |
 | R5 | 15.1 m³/min at the face | Met on paper |
 | R6 | 3.5 min by hand hauling | Met on paper |
 | R7 | 1.6 h estimated | Met on paper (estimate) |
 | R8 | Battery lamps, gas monitors and sound-powered telephones only | Met by design |
-| R9 | About 132 round trips; rope abrasion unknown | **At risk** |
+| R9 | About 250 round trips at the drill-drive rate; rope abrasion unknown; ropes inspected every shift, spare set carried | **At risk on paper**; met in practice if a rope swap counts as maintenance |
 | R10 | Heaviest package 34.8 kg | Met |
 | R11 | Release at 2.5 kN; rope factor 6.5 | Met by design |
 | R12 | Two four-gas monitors in the kit | Met by design |

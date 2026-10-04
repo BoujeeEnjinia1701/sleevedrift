@@ -45,6 +45,7 @@ STYLE = {  # key: (colour, exploded offset in mm, face-end part)
     "trestles": ("#0E7490", (0, 0, 0), False),
     "ties": ("#155E75", (0, 0, 0), False),
     "winches": ("#9CA3AF", (0, 0, 0), False),
+    "drills": ("#16A34A", (0, 0, 0), False),
     "bins": ("#F97316", (0, 0, 0), False),
     "sling": ("#FB923C", (0, 0, 0), False),
     "blower": ("#FDE047", (0, 0, 0), False),
@@ -64,7 +65,7 @@ context = [Part("Rescue pipe, 800 mm, cut open (context)", X["pipe"], "#D1D5DB")
            Part("Structural anchor behind the station (context)", X["anchor"], "#A8A29E"), person]
 
 flow = {"title": "energy per loaded 60 m haul of four full sledges, kJ (SVD-CAL-001 estimates)", "unit": "kJ",
-        "stages": [("One person at the winch handle", 55.5), ("Rope at the winch", 47.2), ("Train hauled 60 m", 41.7),
+        "stages": [("Drill drive at the winch socket (hand as fallback)", 55.5), ("Rope at the winch", 47.2), ("Train hauled 60 m", 41.7),
                    ("Spoil delivered to the portal", "120 L, 203 kg")],
         "losses": [(0, "Winch gearing", 8.3), (1, "Rope drag and return tension", 5.5), (2, "Runner friction on the pipe floor", 41.7)]}
 
@@ -73,7 +74,7 @@ outs = render_all(
     key_figures=["Hooded ring 760 mm OD, four bolted segments, heaviest 31 kg",
                  "Hood 500 mm beyond the pipe mouth; 5 kN gives 5.5 MPa",
                  "Train of four 30 L sledges; 786 N loaded pull",
-                 "Two self-tailing winches; 71 N on the handle",
+                 "Two winches, portal drill drive: 0.42 m3/h (hand 0.22)",
                  "2.5 kN breakaway swivels; rope factor 6.5",
                  "15 m3/min fresh air at the face over 65 m of duct",
                  "Layout shortened; on site 60 m of pipe, station 5.5 m back"],

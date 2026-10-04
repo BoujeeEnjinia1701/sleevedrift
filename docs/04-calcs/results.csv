@@ -1,13 +1,13 @@
 id,value,target,status
-R1,all parts pass a 776 mm circle in a 780 mm pipe; 600 mm variant not designed,800 mm pipe; 600 mm stretch,met (800); at risk (600 stretch)
+R1,"all parts pass a 776 mm circle in a 780 mm pipe; 600 mm variant not designed, kept open pending the co-design partner",800 mm pipe; 600 mm stretch,"met (800); open, pending the co-design partner (600 stretch)"
 R2,"5.5 MPa, 0.01 mm at 5 kN","5 kN, no head contact",met on paper
-R3,0.22 m3/h by hand,"1 m3/h, two-person crew",not met
+R3,"0.42 m3/h with the portal drill drive (0.22 m3/h by hand, the fallback)","1 m3/h, two-person crew",not met
 R4,92 N high gear starting,under 200 N,met on paper
 R5,15.1 m3/min at the face,1 m3/min,met on paper
 R6,3.5 min by hand hauling,under 5 min,met on paper
 R7,1.6 h estimated,2 h,met on paper (estimate)
 R8,"battery lamps, gas monitors and sound-powered telephones only",no power in the pipe,met by design
-R9,132 round trips; rope abrasion unknown,72 h,at risk
+R9,"250 round trips at the drill-drive rate; rope abrasion unknown; ropes inspected every shift, spare set carried",72 h,at risk on paper; met in practice if a rope swap counts as maintenance
 R10,heaviest package 34.8 kg,40 kg,met
 R11,release 2.5 kN; rope factor 6.5,2.5 kN limit,met by design
 R12,two four-gas monitors in the kit,continuous monitoring,met by design

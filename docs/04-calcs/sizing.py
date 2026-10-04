@@ -1,4 +1,4 @@
-"""SleeveDrift sizing calculations (SVD-CAL-001), TRL 3.
+"""SleeveDrift sizing calculations (SVD-CAL-001 v0.2), TRL 3, with the round 2 requirement decisions (SVD-DDR-003).
 
 Run from the repo root:  python docs/04-calcs/sizing.py
 Prints every figure quoted in docs/04-calcs/01-sizing.md, tagged [A1], [B2] and so on, and
@@ -41,7 +41,9 @@ A = dict(
     unload_min_per=1.0,      # min to tip one sledge at the portal (two people)
     load_Lpm=30.0,           # L/min, the second crew member filling sledges with a scoop pan
     signal_min=1.0,          # min per cycle for signals and clipping
-    drill_rpm=120.0,         # handle-socket rpm from a right-angle drill with a winch bit (option)
+    drill_rpm=120.0,         # handle-socket rpm from the portal drill drive with a winch bit (SVD-DDR-003, item 1)
+    drill_kit_kg=7.0,        # two drills, winch bits, spare batteries and a charger (estimate)
+    spare_ropes=True,        # a spare pull and tail rope carried, ropes inspected each shift (SVD-DDR-003, item 2)
     face_adv_m=10.0, face_hours=24.0, bulk=1.30,   # Silkyara hand-mined advance and bulking
     E=205e9, fy=355e6, fy_pin=355e6,
     hood_load=5000.0,        # N, R2
@@ -81,7 +83,8 @@ say("A3", f"Largest clear circle for a crawling person beside the duct and retur
           f"(the empty pipe gives {pid:.0f} mm)")
 ring_clear = 2 * D["ri"]
 say("A4", f"Clear height inside the ring and under the hood: {ring_clear:.0f} mm")
-say("A5", "600 mm pipe (R1 stretch): not designed at TRL 3; the ring, sledge and sheave sizes are parameters in the model")
+say("A5", "600 mm pipe (R1 stretch): kept open until the co-design partner says whether 600 mm pipes are used for rescue (SVD-DDR-003); "
+          "not designed at TRL 3; the ring, sledge and sheave sizes are parameters in the model")
 
 # ------------------------------------------------------------------ B. hood (R2)
 t = P["shell_t"]
@@ -174,21 +177,28 @@ c_hand = cycle(v_l, v_e)
 q_hand = VL / 1000 / (c_hand[4] / 60)
 face = math.pi / 4 * 0.8 ** 2 * A["face_adv_m"] * A["bulk"] / A["face_hours"]
 say("D1", f"Hand: loaded {v_l:.1f} m/min ({A['P_crank']:.0f} W at the handle), empty {v_e:.1f} m/min (handle at {A['rpm_max']:.0f} rpm)")
-say("D2", f"Hand cycle: out {c_hand[0]:.1f}, unload {c_hand[2]:.1f}, in {c_hand[1]:.1f}, load {c_hand[3]:.1f}, signals {A['signal_min']:.1f}: "
-          f"{c_hand[4]:.1f} min for {VL:.0f} L = {q_hand:.2f} m3/h (R3 not met)")
+say("D2", f"Hand cycle (the fallback): out {c_hand[0]:.1f}, unload {c_hand[2]:.1f}, in {c_hand[1]:.1f}, load {c_hand[3]:.1f}, signals {A['signal_min']:.1f}: "
+          f"{c_hand[4]:.1f} min for {VL:.0f} L = {q_hand:.2f} m3/h")
 say("D3", f"Silkyara face rate for comparison: about {A['face_adv_m']:.0f} m in {A['face_hours']:.0f} h through 0.8 m, bulked x {A['bulk']}: "
           f"{face:.2f} m3/h of loose spoil")
 v_d = per_rev * A["drill_rpm"]
 c_b = cycle(v_d, v_d)
 q_b = VL / 1000 / (c_b[4] / 60)
-say("D4", f"Option B, right-angle drill with a winch bit on each winch at {A['drill_rpm']:.0f} rpm: {v_d:.1f} m/min, "
-          f"{F_load * v_d / 60:.0f} W at the rope loaded; cycle {c_b[4]:.1f} min = {q_b:.2f} m3/h")
+say("D4", f"Portal drill drive (design, SVD-DDR-003): a right-angle drill with a winch bit on each winch socket at {A['drill_rpm']:.0f} rpm "
+          f"in high gear: {v_d:.1f} m/min, {F_load * v_d / 60:.0f} W at the rope loaded; cycle {c_b[4]:.1f} min = {q_b:.2f} m3/h "
+          f"({q_b / q_hand:.1f} times the hand rate and {q_b / face:.1f} times the hand-dug face rate; R3 not met against 1 m3/h)")
 n6 = 6
 m6 = (D["sledge_L"] * n6 * A["rho_spoil"] + M["sledge"] * n6 + 5) * g * A["mu_k"] + F_rope + F_back
 c_c = cycle(v_d, v_d, n_sl=n6, unload_per=0.5, load_rate=60.0)
 q_c = D["sledge_L"] * n6 / 1000 / (c_c[4] / 60)
-say("D5", f"Option C, option B plus six sledges, two people tipping at the portal and spoil pre-bagged at the face: pull {m6:.0f} N, "
+say("D5", f"Option C, not chosen: the drill drive plus six sledges, two people tipping at the portal and spoil pre-bagged at the face: pull {m6:.0f} N, "
           f"cycle {c_c[4]:.1f} min = {q_c:.2f} m3/h")
+
+T_sock = lambda F, pr: F / (pr * A["eta_winch"]) * P["handle"] / 1000  # noqa: E731  socket torque, N m
+say("D6", f"Torque at the winch socket: high gear {T_sock(F_load, A['pr_high']):.0f} N m loaded, {T_sock(F_start, A['pr_high']):.0f} N m starting, "
+          f"{T_sock(A['breakaway'], A['pr_high']):.0f} N m at the {A['breakaway'] / 1000:.1f} kN release; low gear {T_sock(A['breakaway'], A['pr_low']):.0f} N m "
+          f"at the release. A drill clutch set between {T_sock(F_start, A['pr_high']) * 1.2:.0f} and {T_sock(A['breakaway'], A['pr_high']) * 0.8:.0f} N m slips "
+          f"before the swivel releases in high gear only; in low gear the swivel stays the limit")
 
 # ------------------------------------------------------------------ E. casualty (R6)
 mc = A["manikin"] + A["stretcher"]
@@ -226,18 +236,23 @@ say("G1", "Set-up steps (min): " + "; ".join(f"{s} {m}" for s, m in steps))
 say("G2", f"Total {tot} min = {tot / 60:.1f} h on the critical path; duct and cable hung in parallel by a second pair (about 40 min); R7 met on paper, verify in drill")
 
 # ------------------------------------------------------------------ H. durability (R9)
-cyc = 72 * 60 / c_hand[4]
+cyc = 72 * 60 / c_b[4]
 km = cyc * 2 * Lp * 2 / 1000
-say("H1", f"72 h at the hand rate: {cyc:.0f} round trips; each metre of rope in the pipe drags about {km:.0f} km over the gritty floor")
+cyc_h = 72 * 60 / c_hand[4]
+say("H1", f"72 h at the drill-drive rate: {cyc:.0f} round trips ({cyc_h:.0f} at the hand rate); each metre of rope in the pipe drags about {km:.0f} km over the gritty floor")
 wear = cyc * 2 * Lp / 1000 * 0.1
 say("H2", f"Sledge runners slide {cyc * 2 * Lp / 1000:.0f} km: about {wear:.1f} mm of 10 mm worn at 0.1 mm/km (UHMW-PE in sandy slurry, assumed)")
-say("H3", "Rope abrasion over that distance on gritty steel is not predictable on paper: R9 at risk")
+say("H3", "Rope abrasion over that distance on gritty steel is not predictable on paper: R9 at risk on paper. Both ropes are inspected at "
+          "every shift change against a wear gauge and a spare set is carried, so a worn rope is swapped in about 20 min as maintenance "
+          "(SVD-DDR-003); the TRL 4 endurance trial decides whether an abrasion-resistant rope is needed")
 
 # ------------------------------------------------------------------ I. masses and cases (R10)
 cases = [("Crown segment", M["crown"]), ("Side segments (2)", 2 * M["side_p"]),
          ("Bottom segment, sheave, spacer and cover", M["bottom"] + M["sheave"] + M["sheave_hw"] + M["cover"]),
          ("Winch trestle (each)", M["trestle"]), ("Winches (2, about 9 kg each), handles, ties", 18 + 4 * M["ties"] + 2),
          ("Sledges (4, nested), links, swivels", 4 * M["sledge"] + 5), ("Ropes (215 m)", 215 * P["rope_kgm"] + 1),
+         ("Spare ropes (215 m) and wear gauge", 215 * P["rope_kgm"] + 1),
+         ("Portal drill drives (2), bits, batteries, charger (estimate)", A["drill_kit_kg"]),
          ("Blower (about 20 kg)", 20.0), ("Duct (65 m at 0.4 kg/m)", 26.0),
          ("Stretcher, spreader, monitors, phones, lamps", 9 + M["spreader"] + 2 + 12 + 4), ("Tools, spigot, jacks, bolts, hangers", 14 + M["spigot"] + M["jacks"] + M["joint_bolts"] + 6)]
 heavy = max(cases, key=lambda c: c[1])
@@ -255,15 +270,15 @@ say("J2", "Largest lines: " + "; ".join(f"{r['item'].split(' ', 1)[1]} USD {floa
 
 # ------------------------------------------------------------------ results table
 R = [
-    ("R1", f"all parts pass a {2 * env:.0f} mm circle in a {pid:.0f} mm pipe; 600 mm variant not designed", "800 mm pipe; 600 mm stretch", "met (800); at risk (600 stretch)"),
+    ("R1", f"all parts pass a {2 * env:.0f} mm circle in a {pid:.0f} mm pipe; 600 mm variant not designed, kept open pending the co-design partner", "800 mm pipe; 600 mm stretch", "met (800); open, pending the co-design partner (600 stretch)"),
     ("R2", f"{sig / 1e6:.1f} MPa, {delta * 1000:.2f} mm at 5 kN", "5 kN, no head contact", "met on paper"),
-    ("R3", f"{q_hand:.2f} m3/h by hand", "1 m3/h, two-person crew", "not met"),
+    ("R3", f"{q_b:.2f} m3/h with the portal drill drive ({q_hand:.2f} m3/h by hand, the fallback)", "1 m3/h, two-person crew", "not met"),
     ("R4", f"{h(F_start, A['pr_high']):.0f} N high gear starting", "under 200 N", "met on paper"),
     ("R5", f"{Qf:.1f} m3/min at the face", "1 m3/min", "met on paper"),
     ("R6", f"{tc:.1f} min by hand hauling", "under 5 min", "met on paper"),
     ("R7", f"{tot / 60:.1f} h estimated", "2 h", "met on paper (estimate)"),
     ("R8", "battery lamps, gas monitors and sound-powered telephones only", "no power in the pipe", "met by design"),
-    ("R9", f"{cyc:.0f} round trips; rope abrasion unknown", "72 h", "at risk"),
+    ("R9", f"{cyc:.0f} round trips at the drill-drive rate; rope abrasion unknown; ropes inspected every shift, spare set carried", "72 h", "at risk on paper; met in practice if a rope swap counts as maintenance"),
     ("R10", f"heaviest package {heavy[1]:.1f} kg", "40 kg", "met"),
     ("R11", f"release {A['breakaway'] / 1000:.1f} kN; rope factor {fos_rope:.1f}", "2.5 kN limit", "met by design"),
     ("R12", "two four-gas monitors in the kit", "continuous monitoring", "met by design"),

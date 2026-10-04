@@ -1,4 +1,4 @@
-"""SleeveDrift drawing sheets, Rev P2 (TRL 3, constructable design SVD-DDR-002).
+"""SleeveDrift drawing sheets, Rev P2 and P3 (TRL 3, constructable design SVD-DDR-002; SVD-DWG-002 Rev P3 adds the portal drill drives, SVD-DDR-003).
 
 Run from the repo root:  python cad/src/sheets.py
 Writes cad/drawings/SVD-DWG-001 (hooded cutting ring and face sheave, general arrangement) and
@@ -85,11 +85,11 @@ def ring_sheet(D, M):
 def station_sheet(D, M):
     st = station_parts(P, 0.0)
     work = ROOT / "cad" / "drawings" / "_views2"
-    views = safe_project_views(Compound([st["trestles"], st["ties"], st["winches"]]), work, line_weight=0.3)
-    s = Sheet(project="SleeveDrift", title="Portal haul station: general arrangement", dwg_no="SVD-DWG-002", rev="P2",
+    views = safe_project_views(Compound([st["trestles"], st["ties"], st["winches"], st["drills"]]), work, line_weight=0.3)
+    s = Sheet(project="SleeveDrift", title="Portal haul station: general arrangement", dwg_no="SVD-DWG-002", rev="P3",
               author="Amish Chadha", date=DATE, scale=None, theme="technical",
-              material="40 x 40 x 3 SHS trestles, 10 mm plate; bought winches per bom/bom.csv. PRELIMINARY, NOT FOR FABRICATION",
-              revisions=REVS)
+              material="40 x 40 x 3 SHS trestles, 10 mm plate; bought winches and drill drives per bom/bom.csv. PRELIMINARY, NOT FOR FABRICATION",
+              revisions=REVS + [("P3", "SVD-DDR-003: portal drill drive on each winch socket", DATE, "AC")])
     s.add_ortho(views)
     s.add_svg(views["iso"], 276, 32, 140, 92, label="Isometric view", sublabel="Not to scale; seen from the front right and above")
     s.add_notes("Main dimensions and interfaces (mm)", [
@@ -98,6 +98,7 @@ def station_sheet(D, M):
         "Top plate 300 x 500 x 10, drilled to the winch base pattern",
         "Winch A (pull rope) at y = -200; winch B (tail rope) at y = +440",
         "Winch centres 300 back from the trestle front (+X face)",
+        "Drill drive (30) on each winch socket, high gear only; hand handle is the fallback",
         "Four cross ties (16), 140 long, M10 bolts, top and bottom",
         "Rope reaches the drums about 650 up, 6 to 7 deg rising",
         "Station front 5,500 from the pipe mouth at the design case",

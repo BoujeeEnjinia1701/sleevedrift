@@ -35,7 +35,7 @@ RENDER_VIEWS = [
              "sheave, cover and duct spigot"},
     {"name": "detail", "groups": ["station"], "explode": False, "el": 28, "az": -35,
      "note": "Detail from the front right and above (about 28 deg elevation): portal haul station with two "
-             "self-tailing winches on welded trestles, rope bins, anchor slings, blower and the rolled casualty "
+             "self-tailing winches on welded trestles with a drill drive on each winch socket, rope bins, anchor slings, blower and the rolled casualty "
              "stretcher; layout shortened"},
 ]
 
@@ -62,6 +62,7 @@ LOOK = {  # key: (colour, material, group, exploded offset)
     "trestles": ("#0E7490", "painted steel", "station", (0, 0, 0)),
     "ties": ("#155E75", "painted steel", "station", (0, 0, 0)),
     "winches": ("#D1D5DB", "polished aluminium", "station", (0, 0, 0)),
+    "drills": ("#16A34A", "green plastic power tool", "station", (0, 0, 0)),
     "bins": ("#F97316", "plastic", "station", (0, 0, 0)),
     "sling": ("#7C3AED", "polyester webbing", "station", (0, 0, 0)),
     "blower": ("#FACC15", "painted steel", "station", (0, 0, 0)),

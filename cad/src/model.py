@@ -6,7 +6,8 @@ Exports STEP and STL into cad/step and cad/stl:
     sleevedrift-ring.step / .stl       hooded cutting ring: four bolted segments, jacking screws,
                                        face return sheave with its cover, duct outlet spigot
     sleevedrift-sledge.step / .stl     one spoil sledge with its runners and end lugs
-    sleevedrift-station.step / .stl    portal haul station: two winch trestles, cross ties, winches
+    sleevedrift-station.step / .stl    portal haul station: two winch trestles, cross ties, winches,
+                                       portal drill drives
     sleevedrift-assembly.step          the whole kit at the design case: 60 m of 800 mm rescue
                                        pipe, train of four sledges at the face, ropes as straight legs
 
@@ -26,6 +27,9 @@ Constructable design, 2026-10-03 (SVD-DDR-002, decided under Amish's pre-approva
     leg, each end on its own two-speed self-tailing winch at the portal, with a 2.5 kN breakaway
     swivel at each end of the train; forced air from a 200 mm blower in layflat duct on magnet
     hangers to a steel outlet spigot on the crown.
+Round 2 requirement decisions, 2026-10-03 (SVD-DDR-003, decided by Amish Chadha): a portal drill drive
+    on each winch socket, hand cranking kept as the fallback (R3); ropes inspected every shift with a
+    spare set carried (R9); the 600 mm stretch kept open pending the co-design partner (R1).
 Main dimensions and interfaces only; tolerances are TRL 4 work. The same PARAMS feed
 docs/04-calcs/sizing.py (SVD-CAL-001), the drawings (cad/src/sheets.py), the concept media
 (cad/src/concept_media.py), the product model and the build plan pictures.
@@ -69,6 +73,9 @@ PARAMS = {
     "x_stand": -5500.0, "trestle": (700.0, 500.0, 560.0), "shs": (40.0, 3.0), "winch_y": (-200.0, 440.0),
     "winch_x": -300.0, "top_plate": (300.0, 500.0, 10.0),
     "winch": (100.0, 40.0, 45.0, 110.0, 85.0, 70.0), "handle": 250.0, "rope_hz": 650.0,
+    # 30 portal drill drive on each winch socket (SVD-DDR-003, item 1): right-angle head, motor body
+    # length and diameter, battery pack; the hand handle is stowed and refitted as the fallback
+    "drill_head": (90.0, 70.0, 90.0), "drill_body": (285.0, 64.0), "drill_batt": (100.0, 80.0, 63.0),
     # 20 to 22 air: duct diameter, hanger radius and angle; spigot; blower position
     "duct_d": 200.0, "duct_r": 265.0, "duct_th": 40.0, "spigot": (194.0, 2.0), "spigot_x": (-360.0, 50.0),
     "hanger_pitch": 2500.0, "blower_xy": (-1200.0, 1100.0),
@@ -453,8 +460,9 @@ def trestle(P, xs, yc):
     return sh + plate + eye
 
 
-def winch(P, xc, yc):
-    """Two-speed self-tailing winch (bought): base, drum, self-tailing jaws, handle in its socket."""
+def winch(P, xc, yc, handle=True):
+    """Two-speed self-tailing winch (bought): base, drum, self-tailing jaws, handle in its socket
+    (handle=False: socket left free for the portal drill drive)."""
     rb, hb, rd, hd, rt, ht = P["winch"]
     z = P["trestle"][2] + P["top_plate"][2]
     base = zcyl(xc, yc, rb, z, z + hb)
@@ -462,9 +470,28 @@ def winch(P, xc, yc):
     tail = zcyl(xc, yc, rt, z + hb + hd, z + hb + hd + ht)
     sock = zcyl(xc, yc, 12, z + hb + hd + ht, z + hb + hd + ht + 20)
     zt = z + hb + hd + ht + 20
+    if not handle:
+        return base + drum + tail + sock
     arm = bx(xc - 12, xc + P["handle"], yc - 12, yc + 12, zt, zt + 14)
     grip = zcyl(xc + P["handle"] - 15, yc, 16, zt + 14, zt + 124)
     return base + drum + tail + sock + arm + grip
+
+
+def drill_drive(P, xc, yc):
+    """Portal drill drive (bought, SVD-DDR-003): winch bit on the socket, right-angle head over it, motor
+    body pointing away from the pipe, battery pack under the body end. Massing only."""
+    rb, hb, rd, hd, rt, ht = P["winch"]
+    zt = P["trestle"][2] + P["top_plate"][2] + hb + hd + ht + 20
+    hx, hy, hh = P["drill_head"]
+    L, dia = P["drill_body"]
+    bl, bw, bh = P["drill_batt"]
+    bit = bx(xc - 8, xc + 8, yc - 8, yc + 8, zt, zt + 20)
+    head = bx(xc - hx / 2, xc + hx / 2, yc - hy / 2, yc + hy / 2, zt + 20, zt + 20 + hh)
+    zb = zt + 20 + hh - dia / 2 - 5
+    body = xcyl(yc, zb, dia / 2, xc - hx / 2 - L, xc - hx / 2 + 0.5)
+    x1 = xc - hx / 2 - L + 15
+    batt = bx(x1 - bl + 30, x1 + 30, yc - bw / 2, yc + bw / 2, zb - dia / 2 - bh + 0.5, zb - dia / 2 + 0.5)
+    return bit + head + body + batt
 
 
 def station_parts(P, xs):
@@ -479,7 +506,8 @@ def station_parts(P, xs):
         for xm in (xs - L / 2 - 150, xs - L / 2 + 150):
             ties.append(shs(xm - s / 2, xm + s / 2, ya1, yb0, z0, z0 + s, "y", P))
     out["ties"] = Compound(ties)
-    out["winches"] = Compound([winch(P, xw, yA), winch(P, xw, yB)])
+    out["winches"] = Compound([winch(P, xw, yA, handle=False), winch(P, xw, yB, handle=False)])
+    out["drills"] = Compound([drill_drive(P, xw, yA), drill_drive(P, xw, yB)])
     # rope bins (bought tubs) outboard of each trestle
     out["bins"] = Compound([zcyl(xs - L / 2, yA - W / 2 - 320, 250, 0, 400) - zcyl(xs - L / 2, yA - W / 2 - 320, 245, 5, 401),
                             zcyl(xs - L / 2, yB + W / 2 + 320, 250, 0, 400) - zcyl(xs - L / 2, yB + W / 2 + 320, 245, 5, 401)])
@@ -587,6 +615,7 @@ NAMES = {  # key: (name, BOM line, material)
     "trestles": ("Winch trestles (2)", 15, "steel"),
     "ties": ("Trestle cross ties (4)", 16, "steel"),
     "winches": ("Self-tailing winches (2)", 17, "bought"),
+    "drills": ("Portal drill drives (2)", 30, "bought"),
     "bins": ("Rope bins (2)", 18, "plastic"),
     "sling": ("Anchor slings (2)", 19, "rope"),
     "blower": ("Ventilation blower, 200 mm", 20, "bought"),
@@ -679,7 +708,7 @@ def export_all(P=PARAMS):
     s = sledge(P, 0.0)
     sl = Compound([s["tray"], s["runners"], s["lugs"]])
     st = station_parts(P, 0.0)
-    stn = Compound([st["trestles"], st["ties"], st["winches"]])
+    stn = Compound([st["trestles"], st["ties"], st["winches"], st["drills"]])
     for name, shp in (("ring", ring), ("sledge", sl), ("station", stn)):
         export_step(shp, str(out_step / f"sleevedrift-{name}.step"))
         export_stl(shp, str(out_stl / f"sleevedrift-{name}.stl"), tolerance=0.5, angular_tolerance=0.3)

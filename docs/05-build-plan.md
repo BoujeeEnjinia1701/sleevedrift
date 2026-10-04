@@ -3,7 +3,7 @@ doc_id: SVD-BLD-001
 title: SleeveDrift prototype build plan
 project: SleeveDrift
 doc_type: Build plan
-version: "0.1"
+version: "0.2"
 status: Draft
 date: '2026-10-03'
 author: Amish Chadha
@@ -13,6 +13,10 @@ revisions:
   date: '2026-10-03'
   author: Amish Chadha
   change: First build plan; design made constructable (SVD-DDR-002)
+- version: "0.2"
+  date: '2026-10-03'
+  author: Amish Chadha
+  change: 'Round 2 decisions (SVD-DDR-003): portal drill drive on each winch socket with hand cranking as the fallback; spare rope set and wear gauge; rope inspection at every shift change'
 ---
 
 # SleeveDrift prototype build plan
@@ -27,7 +31,7 @@ revisions:
 
 *Figure 1. The made components (1 to 11) and the main bought ones, pulled apart and numbered in build order. Ropes, duct, blower, signal line, lamps, gas monitors and tools are not shown.*
 
-The kit has three working groups. At the face, a steel ring 760 mm across is built from four curved segments bolted together inside the mouth of the pipe; the top segment runs on as a hood over the digger, and a flat sheave on the bottom segment turns the haul rope. Along the pipe, a train of four folded steel sledges on plastic runners shuttles between a pull rope and a tail rope, with a breakaway swivel at each end. At the portal, two bought self-tailing sailing winches stand on two welded trestles; a blower pushes fresh air down a layflat duct to a spigot under the hood. Left and right are as seen from the portal looking into the pipe: the train runs along the middle of the pipe floor, the return rope lies on the floor to its left, and the air duct hangs on the upper left wall. Eleven parts are made, by rolling and welding plate, folding sheet and welding square tube; the rest are bought and fitted. The parts cost about USD 9,900 from the BOM.
+The kit has three working groups. At the face, a steel ring 760 mm across is built from four curved segments bolted together inside the mouth of the pipe; the top segment runs on as a hood over the digger, and a flat sheave on the bottom segment turns the haul rope. Along the pipe, a train of four folded steel sledges on plastic runners shuttles between a pull rope and a tail rope, with a breakaway swivel at each end. At the portal, two bought self-tailing sailing winches stand on two welded trestles, each driven by a cordless right-angle drill with a winch bit in its handle socket, with the hand handles kept as the fallback; a blower pushes fresh air down a layflat duct to a spigot under the hood. Left and right are as seen from the portal looking into the pipe: the train runs along the middle of the pipe floor, the return rope lies on the floor to its left, and the air duct hangs on the upper left wall. Eleven parts are made, by rolling and welding plate, folding sheet and welding square tube; the rest are bought and fitted. The parts cost about USD 10,800 from the BOM, including the two drill drives and a spare rope set.
 
 ## 2. What changed to make it buildable
 
@@ -266,6 +270,8 @@ The kit has three working groups. At the face, a steel ring 760 mm across is bui
 
 - **Ropes.** 10 mm polyester double braid of at least 18 kN: a 75 m pull rope and a 140 m tail rope, each with an eye splice at the train end.
 - **Winches.** Two two-speed self-tailing winches for 8 to 12 mm rope, rated at least 10 kN, with locking handles.
+- **Portal drill drives (line 30).** Two heavy-duty cordless right-angle drills with an adjustable slip clutch and a dead-man trigger, about 120 rpm under load, each with a winch bit that fits the winch handle socket, two spare batteries each and one charger. Set the clutch to slip between about 28 and 45 N m (SVD-CAL-001, D6) and use the drill in high gear only.
+- **Spare ropes and wear gauge (line 31).** A second pull rope and tail rope as above, and a go/no-go wear gauge with a 9 mm slot cut from 2 mm sheet.
 - **Rope bins, slings and shackles.** Two 80 L tubs; two 1 t round slings with bow shackles.
 - **Air line.** A 200 mm confined-space blower giving at least 0.27 m³/s at 500 Pa, nine 7.6 m lengths of layflat duct with couplings, and sixty magnet hangers.
 - **Light, signal and gas.** Two magnetic LED work lamps and four cap lamps; two sound-powered telephones and 80 m of cable with a pull-cord bell; two four-gas monitors.
@@ -281,11 +287,11 @@ Steps 1 to 3 are at the portal, steps 4 to 11 at the face, and steps 12 to 14 br
 
 Set the two trestles on level ground 5.5 m behind the pipe mouth, in line with the pipe, and bolt the four cross ties with M10 bolts.
 
-### Step 2: bolt the winches to the top plates
+### Step 2: bolt the winches to the top plates; drill drives on the sockets
 
 ![Step 2](05-build-plan/step-02.png)
 
-Winch A, for the pull rope, goes on the right-hand trestle (looking from the station toward the pipe); winch B, for the tail rope, on the left-hand one. Use the winch maker's bolts and washers under the plate.
+Winch A, for the pull rope, goes on the right-hand trestle (looking from the station toward the pipe); winch B, for the tail rope, on the left-hand one. Use the winch maker's bolts and washers under the plate. Put the winch bit of a drill drive into each winch's handle socket, with the drill body pointing away from the pipe, and select high gear. Keep the two locking hand handles in the station box: if a drill or its batteries fail, the haul carries on by hand.
 
 ### Step 3: slings to the structural anchor; rope bins out
 
@@ -380,11 +386,11 @@ Splice the bridle to the stretcher's head grommets and the spreader bar. Keep it
 Work stops at each point below until what is listed is true.
 
 1. **Before anyone enters the pipe:** gas monitors bump tested and worn; blower running with its intake in clean air; standby person at the portal; the incident commander (or trial lead) has agreed the signal code.
-2. **Before the first haul:** slings tight and level at rope height to a rated anchor; both winches bolted down; swivel pins checked to 2.5 kN; jacking screws tightened and locked.
+2. **Before the first haul:** slings tight and level at rope height to a rated anchor; both winches bolted down; swivel pins checked to 2.5 kN; jacking screws tightened and locked; both drill clutches set to slip between about 28 and 45 N m, the winches in high gear, and the dead-man triggers working.
 3. **Before every haul:** a clear signal from the face that nobody is on the rope lines or near the sheave; the cover is on the sheave; the easing winch is tended.
 4. **Before loading the hood or the sheave in a test:** the load is applied by the rig, never by people standing on or under the hood.
 5. **If a swivel releases:** stop hauling, find and clear the jam, fit a new pin of the same rating. Never fit a bolt or a stronger pin.
-6. **At every shift change:** recheck the jacking screws, inspect both ropes for wear and both swivels for damage, and rotate the crews.
+6. **At every shift change:** recheck the jacking screws, inspect both ropes along their length against the wear gauge and swap a worn rope for the spare (about 20 min), inspect both swivels for damage, charge the drill batteries, and rotate the crews.
 7. **On any gas alarm or loss of air:** everyone out of the pipe, haul stopped, until the cause is found and the air is clear.
 
 ## 7. Tools, skills and workspace
