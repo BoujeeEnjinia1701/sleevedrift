@@ -1,4 +1,4 @@
-"""SleeveDrift drawing sheets, Rev P2 and P3 (TRL 3, constructable design SVD-DDR-002; SVD-DWG-002 Rev P3 adds the portal drill drives, SVD-DDR-003).
+"""SleeveDrift drawing sheets, Rev P2 (TRL 3, constructable design SVD-DDR-002).
 
 Run from the repo root:  python cad/src/sheets.py
 Writes cad/drawings/SVD-DWG-001 (hooded cutting ring and face sheave, general arrangement) and
@@ -21,6 +21,7 @@ from model import PARAMS as P, derived, ring_parts, station_parts, masses  # noq
 DATE = "2026-10-03"
 REVS = [("P1", "Preliminary GA for TRL 3 (from cad/src/model.py)", DATE, "AC"),
         ("P2", "SVD-DDR-002: design for construction", DATE, "AC")]
+REVS2 = REVS + [("P3", "SVD-DDR-003: drill drive on each winch, drum guards", DATE, "AC")]
 
 
 def safe_project_views(part, workdir, line_weight=0.35):
@@ -85,25 +86,27 @@ def ring_sheet(D, M):
 def station_sheet(D, M):
     st = station_parts(P, 0.0)
     work = ROOT / "cad" / "drawings" / "_views2"
-    views = safe_project_views(Compound([st["trestles"], st["ties"], st["winches"], st["drills"]]), work, line_weight=0.3)
+    views = safe_project_views(Compound([st["trestles"], st["ties"], st["winches"], st["bits"], st["drills"], st["guards"]]),
+                               work, line_weight=0.3)
     s = Sheet(project="SleeveDrift", title="Portal haul station: general arrangement", dwg_no="SVD-DWG-002", rev="P3",
               author="Amish Chadha", date=DATE, scale=None, theme="technical",
-              material="40 x 40 x 3 SHS trestles, 10 mm plate; bought winches and drill drives per bom/bom.csv. PRELIMINARY, NOT FOR FABRICATION",
-              revisions=REVS + [("P3", "SVD-DDR-003: portal drill drive on each winch socket", DATE, "AC")])
+              material="40 x 40 x 3 SHS trestles, 10 mm plate; bought winches and drills per bom/bom.csv. PRELIMINARY, NOT FOR FABRICATION",
+              revisions=REVS2)
     s.add_ortho(views)
     s.add_svg(views["iso"], 276, 32, 140, 92, label="Isometric view", sublabel="Not to scale; seen from the front right and above")
     s.add_notes("Main dimensions and interfaces (mm)", [
         "Two welded trestles (15), each 700 x 500, 560 high, 40 x 40 x 3 SHS",
+        "Right-angle drill (30) on a winch bit (31) in each socket; body outboard",
+        "Drill in high gear only, 120 rpm; clutch about 35 N m; no trigger lock",
+        "Drum guard (33) round the rear 120 deg, 260 dia, two legs to the top plate",
+        "Winch handles stowed; hand cranking is the fallback",
         f"Trestle {M['trestle']:.1f} kg; carried and set one at a time",
         "Top plate 300 x 500 x 10, drilled to the winch base pattern",
         "Winch A (pull rope) at y = -200; winch B (tail rope) at y = +440",
         "Winch centres 300 back from the trestle front (+X face)",
-        "Drill drive (30) on each winch socket, high gear only; hand handle is the fallback",
-        "Four cross ties (16), 140 long, M10 bolts, top and bottom",
         "Rope reaches the drums about 650 up, 6 to 7 deg rising",
         "Station front 5,500 from the pipe mouth at the design case",
-        "Anchor eye 10 mm plate, 22 hole 640 up at the rear centre of each trestle",
-        "Round sling (19) level to a structural anchor behind; never to the pushing machine",
+        "Anchor eye 22 hole 640 up; round sling (19) level to a structural anchor",
         "Rope bins (18) outboard; nobody in the rope lines while hauling",
         "Third-angle; front view from -Y; pipe mouth toward +X; (n) = BOM line",
     ], x=276, y=135, width=146)

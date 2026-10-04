@@ -3,7 +3,7 @@ doc_id: SVD-PRC-001
 title: SleeveDrift design precis
 project: SleeveDrift
 doc_type: Precis
-version: "0.4"
+version: "0.3"
 status: Draft
 date: '2026-10-03'
 author: Amish Chadha
@@ -21,10 +21,6 @@ revisions:
   date: '2026-10-03'
   author: Amish Chadha
   change: TRL 3; constructable design (SVD-DDR-002) with segmented ring, jacking screws, shuttle train on two self-tailing winches, breakaway swivels; figures from SVD-CAL-001
-- version: "0.4"
-  date: '2026-10-03'
-  author: Amish Chadha
-  change: 'Round 2 decisions (SVD-DDR-003): portal drill drive on each winch socket with hand cranking as the fallback; rope inspection and spare set; 600 mm stretch kept open; figures from SVD-CAL-001 v0.2'
 ---
 
 # SleeveDrift design precis
@@ -35,13 +31,13 @@ Equips hand-mining crews inside rescue pipes with a hooded ring, rope-loop sledg
 
 *Figure 1. Concept render in the shortened picture layout (6.8 m of pipe instead of 60 m; the station 2.4 m behind the mouth instead of 5.5 m). The pipe is cut open on the near side. CONCEPT, NOT FOR FABRICATION.*
 
-SleeveDrift gives the three people at the face of a hand-dug rescue drift what they had to improvise at Silkyara: a steel hood over the digger, a rope haul that carries spoil 60 m back to the portal without anyone dragging it, and fresh air delivered behind the hood. On paper every piece passes along an 800 mm pipe and weighs under 35 kg, the hood carries 5 kN with almost no deflection, the portal crew turns the winch with under 100 N, and a casualty can be pulled out in about 3.5 minutes. The miss is output: with a cordless drill driving each winch at the portal the haul moves about 0.42 m³ of spoil an hour, and 0.22 m³ by hand as the fallback, against a target of 1 m³ (SVD-CAL-001 v0.2). This is an open engineering reference, not certified rescue, mining or confined-space equipment.
+SleeveDrift gives the three people at the face of a hand-dug rescue drift what they had to improvise at Silkyara: a steel hood over the digger, a rope haul that carries spoil 60 m back to the portal without anyone dragging it, and fresh air delivered behind the hood. On paper every piece passes along an 800 mm pipe and weighs under 35 kg, the hood carries 5 kN with almost no deflection, the portal crew turns the winch with under 100 N, and a casualty can be pulled out in about 3.5 minutes. The miss is output: by hand the haul moves about 0.22 m³ of spoil an hour against a target of 1 m³ (SVD-CAL-001). This is an open engineering reference, not certified rescue, mining or confined-space equipment.
 
 ## How it works
 
 The **hooded cutting ring** is a short steel sleeve, 760 mm outside diameter, made of four rolled segments bolted together through flanges on the inside. It sits in the mouth of the lead pipe with 200 mm inside the pipe and 250 mm beyond it; the crown segment runs on another 250 mm as a hood over the digger's head and shoulders. The ring rests on the pipe invert, and four jacking screws in its upper half press swivel pads against the pipe wall to hold it. Nothing is drilled or welded to the pipe. The front edges are bevelled so the ring helps the pipe cut into the loosened debris as it is pushed.
 
-A **return sheave** lies flat on a bracket welded to the bottom segment, under a chequer-plate cover that doubles as a kneeling plate. The **haul** is a shuttle: a train of four low sledges runs along the pipe floor between a pull rope and a tail rope. The pull rope runs back to winch A at the portal; the tail rope runs forward from the train, round the face sheave and back along the floor beside the train to winch B. Winding winch A brings the loaded train out while winch B eases; winding winch B sends the empty train back in. Each winch is wound by a cordless right-angle drill with a winch bit in its handle socket (SVD-DDR-003); the hand handles are the fallback. A breakaway swivel at each end of the train parts at 2.5 kN, so a jam cannot overload the rope, the sheave or the ring.
+A **return sheave** lies flat on a bracket welded to the bottom segment, under a chequer-plate cover that doubles as a kneeling plate. The **haul** is a shuttle: a train of four low sledges runs along the pipe floor between a pull rope and a tail rope. The pull rope runs back to winch A at the portal; the tail rope runs forward from the train, round the face sheave and back along the floor beside the train to winch B. Winding winch A brings the loaded train out while winch B eases; winding winch B sends the empty train back in. A breakaway swivel at each end of the train parts at 2.5 kN, so a jam cannot overload the rope, the sheave or the ring.
 
 The **air line** is a 200 mm blower at the portal feeding layflat duct hung on magnet hangers along the upper wall of the pipe, ending on a steel spigot held in two saddles inside the crown, just behind the hood. A **signal line** of sound-powered telephones (no batteries) runs on the same hangers, with a pull-cord bell as backup; battery lamps light the face. A **roll-up casualty stretcher** with a towing spreader bar clips into the same ropes in place of the train.
 
@@ -98,14 +94,13 @@ All were decided by Amish under his pre-approvals of 2026-10-03 (SVD-DDR-001 and
 | Train | 4 x 29.9 L = 120 L, 203 kg of spoil | Loose spoil 1.7 kg/L |
 | Pull, loaded and starting | 786 N and 1,018 N | Runners on gritty steel, friction 0.30 and 0.40 |
 | Handle force, high gear | 71 N loaded, 92 N starting | Power ratio 13, efficiency 0.85 |
-| Output, portal drill drive | 0.42 m³/h | 120 rpm at the socket, 14.5 m/min, 17.3 min cycle |
-| Output by hand (fallback) | 0.22 m³/h | One person cranking at 60 W, 32.7 min cycle |
+| Output by hand | 0.22 m³/h | One person cranking at 60 W, 32.7 min cycle |
 | Casualty, 60 m | 3.5 min | Three people hauling hand over hand at 0.4 m/s |
 | Air at the face | 15.1 m³/min | 0.27 m³/s at the blower, 525 Pa, 6.5 % leakage |
 | Set-up | 1.6 h | Sequence in SVD-CAL-001, section G |
-| Kit mass | 326 kg in 14 packages, heaviest 34.8 kg | Spare ropes and drill drives included |
+| Kit mass | 304 kg in 12 packages, heaviest 34.8 kg | |
 
-Value-engineering target: USD 5,000. Estimated cost of the constructable design: USD 10,804 (USD 5,804 over the target), including the two drill drives (USD 700) and a spare rope set (USD 236.50). The two winches, the gas monitors, the telephones and the air line are most of it.
+Value-engineering target: USD 5,000. Estimated cost of the constructable design: USD 9,867.50 (USD 4,867.50 over the target). The two winches, the gas monitors, the telephones and the air line are most of it.
 
 ![Energy per loaded trip](../media/flow.png)
 
@@ -134,8 +129,6 @@ From the preliminary patent, trademark and prior-art screen (not legal advice):
 > - Moving ropes and the face sheave can trap hands, feet and clothing. Nobody is on the rope lines or near the sheave while the train moves; hauling starts only on a clear signal from the face, and the cover stays on the sheave.
 > - The breakaway swivels set the overload limit. Never replace a shear pin with a bolt or a stronger pin.
 > - Winch handles are removed when not in use; the easing winch is tended at all times.
-> - The portal drill drives have a dead-man trigger and a slip clutch set to slip before the breakaway swivel releases, which holds in high gear only; the drill is used in high gear.
-> - Both ropes are inspected against a wear gauge at every shift change and a worn rope is swapped for the spare.
 > - Rotate crews to limit heat stress and fatigue.
 
 ## Questions for the first trials
@@ -143,4 +136,4 @@ From the preliminary patent, trademark and prior-art screen (not legal advice):
 - How fast does a trained crew load and empty the sledges, and how fast does the face produce spoil?
 - How quickly does the rope wear on a gritty pipe floor over a 72-hour shift?
 - Do the jacking screw pads hold on a painted or rusty pipe at the friction assumed (0.20)?
-- Are 600 mm pipes used for rescue? The co-design partner's answer decides whether the 600 mm stretch of R1 is designed (SVD-DDR-003).
+- What does the co-design partner want for a 600 mm pipe?

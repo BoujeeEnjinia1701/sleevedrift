@@ -16,22 +16,22 @@ revisions:
 - version: "0.2"
   date: '2026-10-03'
   author: Amish Chadha
-  change: 'Round 2 decisions (SVD-DDR-003): portal drill drive on each winch socket with hand cranking as the fallback; spare rope set and wear gauge; rope inspection at every shift change'
+  change: "Amish's decisions of 2026-10-03 (SVD-DDR-003): a drill drive and drum guard on each winch (new making sketch SVD-DWG-112, joint 9, steps 2, 3 and 15), rope inspection every shift with a spare set"
 ---
 
 # SleeveDrift prototype build plan
 
 **Plan, not yet built.** How to build the first proof-of-concept SleeveDrift kit, component by component, and set it up in a length of rescue pipe. Building and testing to it is TRL 4 work. Decisions still to be made are kept in the design decisions register (`docs/06-design-decisions.md`), not here.
 
-> **Safety:** SleeveDrift is used by people working inside a pipe under collapse debris, with ropes under tension and a hand-wound haul. It is an open engineering reference, not certified rescue, mining or confined-space equipment. Build and trial it in a test pipe on open ground first, never in a live rescue. Nobody enters the pipe without a gas monitor, a standby at the portal and a way to be pulled out; nobody stands on a rope line or near the face sheave while the train moves. The safety stops in section 6 apply to every trial.
+> **Safety:** SleeveDrift is used by people working inside a pipe under collapse debris, with ropes under tension and a winch haul driven by electric drills at the portal. It is an open engineering reference, not certified rescue, mining or confined-space equipment. Build and trial it in a test pipe on open ground first, never in a live rescue. Nobody enters the pipe without a gas monitor, a standby at the portal and a way to be pulled out; nobody stands on a rope line or near the face sheave while the train moves. The safety stops in section 6 apply to every trial.
 
 ## 1. What you are building
 
 ![Every component, pulled apart and numbered in build order](05-build-plan/overview.png)
 
-*Figure 1. The made components (1 to 11) and the main bought ones, pulled apart and numbered in build order. Ropes, duct, blower, signal line, lamps, gas monitors and tools are not shown.*
+*Figure 1. The made components (1 to 12) and the main bought ones, pulled apart and numbered in build order. Ropes, duct, blower, signal line, lamps, gas monitors and tools are not shown.*
 
-The kit has three working groups. At the face, a steel ring 760 mm across is built from four curved segments bolted together inside the mouth of the pipe; the top segment runs on as a hood over the digger, and a flat sheave on the bottom segment turns the haul rope. Along the pipe, a train of four folded steel sledges on plastic runners shuttles between a pull rope and a tail rope, with a breakaway swivel at each end. At the portal, two bought self-tailing sailing winches stand on two welded trestles, each driven by a cordless right-angle drill with a winch bit in its handle socket, with the hand handles kept as the fallback; a blower pushes fresh air down a layflat duct to a spigot under the hood. Left and right are as seen from the portal looking into the pipe: the train runs along the middle of the pipe floor, the return rope lies on the floor to its left, and the air duct hangs on the upper left wall. Eleven parts are made, by rolling and welding plate, folding sheet and welding square tube; the rest are bought and fitted. The parts cost about USD 10,800 from the BOM, including the two drill drives and a spare rope set.
+The kit has three working groups. At the face, a steel ring 760 mm across is built from four curved segments bolted together inside the mouth of the pipe; the top segment runs on as a hood over the digger, and a flat sheave on the bottom segment turns the haul rope. Along the pipe, a train of four folded steel sledges on plastic runners shuttles between a pull rope and a tail rope, with a breakaway swivel at each end. At the portal, two bought self-tailing sailing winches stand on two welded trestles. Each winch is turned by a cordless right-angle drill fitted with a winch bit in place of the handle, behind a sheet guard round the back of the drum; the handles are kept for winding by hand if the drills cannot be used. A blower pushes fresh air down a layflat duct to a spigot under the hood. Left and right are as seen from the portal looking into the pipe: the train runs along the middle of the pipe floor, the return rope lies on the floor to its left, and the air duct hangs on the upper left wall. Twelve parts are made, by rolling and welding plate, folding sheet, welding square tube and rolling perforated sheet; the rest are bought and fitted. The parts cost about USD 10,800 from the BOM.
 
 ## 2. What changed to make it buildable
 
@@ -45,6 +45,7 @@ The kit has three working groups. At the face, a steel ring 760 mm across is bui
 | Return pulley | Fixed to the ring | A flat sheave on a pin and base plate welded to the bottom segment, under a kneeling cover | The sheave needs a flat, square seat inside a curved shell, and a guard |
 | Loop and sledges | Endless loop with clip-on sledges | A train of four sledges shuttling between a pull rope and a tail rope | Two lanes of sledges do not fit beside a crew in the pipe |
 | Haul station | A hand capstan | Two self-tailing winches on two welded trestles | A winding drum for 60 m of rope would be 1.4 m long |
+| Haul drive | A hand capstan | A cordless right-angle drill on each winch, with a guard round the drum; handles kept as the fallback | Amish's decision 24B (2026-10-03): it roughly doubles the spoil hauled and adds nothing inside the pipe |
 | Overload | Not shown | A breakaway swivel at each end of the train, 2.5 kN | A person heaving on a winch handle could put over 13 kN on the rope |
 | Air outlet | Behind the hood | A steel spigot in two saddles inside the crown; duct on magnet hangers | The duct needs a rigid end and must leave room to crawl |
 
@@ -256,7 +257,28 @@ The kit has three working groups. At the face, a steel ring 760 mm across is bui
 
 **Check before moving on.** Pulled by the eye, the bar sits square.
 
-### 3.12 Bought components
+### 3.12 Winch drum guards (two)
+
+![Making sketch](../cad/drawings/SVD-DWG-112.png)
+
+**What it is and what it is made from.** A curved guard of 2 mm perforated steel sheet round the back of each winch drum, on two flat bar legs. About 0.5 kg each.
+
+**How to make it.**
+
+1. Cut a strip of perforated sheet 175 mm high and about 275 mm long and roll it to 260 mm outside diameter, so it wraps a third of the way round the winch.
+2. Cut two 30 x 5 mm flat bar legs 65 mm long and weld them inside the curve, 10 degrees in from each end, so they stand 45 mm below its lower edge.
+3. Drill each leg foot for an M8 bolt, and drill and tap the trestle top plate to match.
+4. Deburr every edge.
+
+**How it fits the parts next to it.** The legs bolt to the top plate behind the winch, on the side away from the pipe; the open side faces the pipe so the rope reaches the drum. The drill sits above it on the winch socket.
+
+![Close-up of the joint](05-build-plan/joint-09.png)
+
+*Figure 10. Joint 9: the drill on its winch bit in the winch socket, with the drum guard round the back of the drum.*
+
+**Check before moving on.** The guard is at least 10 mm clear of the drum and of the rope on the drum all the way round, and there is no edge that could catch a sleeve.
+
+### 3.13 Bought components
 
 - **Face sheave.** 260 mm across, grooved for 10 mm rope, bronze bush for a 25 mm pin, rated at least 1,000 kg. Check the bore fits the pin.
 - **Joint bolts.** Twenty M12 x 40 class 8.8 with nuts and washers (sixteen used).
@@ -266,12 +288,11 @@ The kit has three working groups. At the face, a steel ring 760 mm across is bui
 
 ![Close-up of the joint](05-build-plan/joint-05.png)
 
-*Figure 10. Joint 5: a breakaway swivel between the pull rope and the train.*
+*Figure 11. Joint 5: a breakaway swivel between the pull rope and the train.*
 
-- **Ropes.** 10 mm polyester double braid of at least 18 kN: a 75 m pull rope and a 140 m tail rope, each with an eye splice at the train end.
+- **Ropes.** 10 mm polyester double braid of at least 18 kN: a 75 m pull rope and a 140 m tail rope, each with an eye splice at the train end. A spare set of the same two ropes goes in the kit, with a 9 mm slot wear gauge cut from scrap sheet.
 - **Winches.** Two two-speed self-tailing winches for 8 to 12 mm rope, rated at least 10 kN, with locking handles.
-- **Portal drill drives (line 30).** Two heavy-duty cordless right-angle drills with an adjustable slip clutch and a dead-man trigger, about 120 rpm under load, each with a winch bit that fits the winch handle socket, two spare batteries each and one charger. Set the clutch to slip between about 28 and 45 N m (SVD-CAL-001, D6) and use the drill in high gear only.
-- **Spare ropes and wear gauge (line 31).** A second pull rope and tail rope as above, and a go/no-go wear gauge with a 9 mm slot cut from 2 mm sheet.
+- **Drill drive.** Two heavy-duty cordless right-angle drills (18 V class, at least 60 N m) with an adjustable slip clutch, a trigger that cannot be locked on and a side handle; two winch bits that fit the winch socket; six 5 Ah batteries in all and two chargers.
 - **Rope bins, slings and shackles.** Two 80 L tubs; two 1 t round slings with bow shackles.
 - **Air line.** A 200 mm confined-space blower giving at least 0.27 m³/s at 500 Pa, nine 7.6 m lengths of layflat duct with couplings, and sixty magnet hangers.
 - **Light, signal and gas.** Two magnetic LED work lamps and four cap lamps; two sound-powered telephones and 80 m of cable with a pull-cord bell; two four-gas monitors.
@@ -279,7 +300,7 @@ The kit has three working groups. At the face, a steel ring 760 mm across is bui
 
 ## 4. Putting it together
 
-Steps 1 to 3 are at the portal, steps 4 to 11 at the face, and steps 12 to 14 bring the haul into use. For a first trial, use a test pipe on open ground.
+Steps 1 to 3 are at the portal, steps 4 to 11 at the face, and steps 12 to 15 bring the haul into use. For a first trial, use a test pipe on open ground.
 
 ### Step 1: set the trestles and bolt the cross ties
 
@@ -287,11 +308,11 @@ Steps 1 to 3 are at the portal, steps 4 to 11 at the face, and steps 12 to 14 br
 
 Set the two trestles on level ground 5.5 m behind the pipe mouth, in line with the pipe, and bolt the four cross ties with M10 bolts.
 
-### Step 2: bolt the winches to the top plates; drill drives on the sockets
+### Step 2: bolt the winches and drum guards to the top plates
 
 ![Step 2](05-build-plan/step-02.png)
 
-Winch A, for the pull rope, goes on the right-hand trestle (looking from the station toward the pipe); winch B, for the tail rope, on the left-hand one. Use the winch maker's bolts and washers under the plate. Put the winch bit of a drill drive into each winch's handle socket, with the drill body pointing away from the pipe, and select high gear. Keep the two locking hand handles in the station box: if a drill or its batteries fail, the haul carries on by hand.
+Winch A, for the pull rope, goes on the right-hand trestle (looking from the station toward the pipe); winch B, for the tail rope, on the left-hand one. Use the winch maker's bolts and washers under the plate. Bolt a drum guard behind each winch, on the side away from the pipe.
 
 ### Step 3: slings to the structural anchor; rope bins out
 
@@ -363,7 +384,13 @@ Shackle the tail rope's eye to the train's face-end swivel, take it round the fa
 
 ![Step 14](05-build-plan/step-14.png)
 
-Splice the bridle to the stretcher's head grommets and the spreader bar. Keep it rolled at the portal; to use it, unclip the train from the swivels and clip the swivels to the spreader bar's eye and to the stretcher's foot.
+Splice the bridle to the stretcher's head grommets and the spreader bar. Keep it rolled at the portal; to use it, unclip the train from the swivels and clip the swivels to the spreader bar's eye and to the stretcher's foot. The casualty is hauled hand over hand, not with the drills.
+
+### Step 15: drills on the winch sockets for hauling
+
+![Step 15](05-build-plan/step-15.png)
+
+Set each drill's clutch to about 35 N m, fit the winch bit in its chuck and push the bit into the winch socket with the drill body pointing outward, away from the rope lane. Run the winches in high gear only, at about 120 rpm. The operator holds the drill by both handles; it stops as soon as the trigger is let go. Stow the winch handles where they can be reached, for winding by hand if a drill fails or the batteries run out. **Hold point:** with the train empty, check that each drill's clutch slips before the winch drum stalls.
 
 ## 5. First checks
 
@@ -376,6 +403,8 @@ Splice the bridle to the stretcher's head grommets and the spreader bar. Keep it
 | Ring hold | R2, R11 | Pull 5 kN backward on the sheave pin with the ring jacked in the test pipe | The ring does not move |
 | Breakaway release | R11 | Pull each swivel to release on a calibrated gauge | Releases between 2.2 and 2.8 kN |
 | Handle force | R4 | Spring balance on the handle with a loaded train | Under 200 N in high gear |
+| Drill clutch | R11 | Set the clutch, then pull the rope against a load cell in high gear | The clutch slips at about 1.5 kN, below the swivel release |
+| Drill haul rate | R3 | Time loaded and empty runs over the test pipe | About 14.5 m/min |
 | Air at the face | R5 | Anemometer across the spigot | At least 1 m³/min |
 | Gas monitors | R12 | Bump test before each shift | Both alarm |
 | Casualty drill | R6 | 100 kg manikin, 60 m, three people hauling | Under 5 min |
@@ -386,24 +415,25 @@ Splice the bridle to the stretcher's head grommets and the spreader bar. Keep it
 Work stops at each point below until what is listed is true.
 
 1. **Before anyone enters the pipe:** gas monitors bump tested and worn; blower running with its intake in clean air; standby person at the portal; the incident commander (or trial lead) has agreed the signal code.
-2. **Before the first haul:** slings tight and level at rope height to a rated anchor; both winches bolted down; swivel pins checked to 2.5 kN; jacking screws tightened and locked; both drill clutches set to slip between about 28 and 45 N m, the winches in high gear, and the dead-man triggers working.
-3. **Before every haul:** a clear signal from the face that nobody is on the rope lines or near the sheave; the cover is on the sheave; the easing winch is tended.
+2. **Before the first haul:** slings tight and level at rope height to a rated anchor; both winches bolted down; swivel pins checked to 2.5 kN; jacking screws tightened and locked.
+3. **Before every haul:** a clear signal from the face that nobody is on the rope lines or near the sheave; the cover is on the sheave; the easing winch is tended; both drum guards are in place and the drill is in high gear.
 4. **Before loading the hood or the sheave in a test:** the load is applied by the rig, never by people standing on or under the hood.
 5. **If a swivel releases:** stop hauling, find and clear the jam, fit a new pin of the same rating. Never fit a bolt or a stronger pin.
-6. **At every shift change:** recheck the jacking screws, inspect both ropes along their length against the wear gauge and swap a worn rope for the spare (about 20 min), inspect both swivels for damage, charge the drill batteries, and rotate the crews.
+6. **At every shift change:** recheck the jacking screws; inspect both ropes along their length against the 9 mm wear gauge and swap in the spare set if any part is worn through the cover or passes the gauge; check both swivels for damage, both drill clutch settings and both guards; rotate the crews.
+8. **Drills:** never wedge or tape a drill trigger, never use a drill in low gear, never haul the stretcher with a drill, and keep loose clothing and gloves away from the drum. Charge batteries in the open at the portal, away from fuel and the blower intake.
 7. **On any gas alarm or loss of air:** everyone out of the pipe, haul stopped, until the cause is found and the air is clear.
 
 ## 7. Tools, skills and workspace
 
 - **Workshop:** plate rolling (or a fabricator who rolls), MIG or stick welding, a pillar drill, a lathe for the pads and spacer, a sheet metal brake for the sledges, a 760 mm plywood template and a flat table.
 - **Skills:** structural welding, rigging and rope splicing (or bought spliced eyes), and a person trained in confined-space entry for any trial inside a pipe.
-- **Trial site:** open ground with a test pipe of the same bore, at least a few metres long, chocked so it cannot roll; a rated anchor point behind the station; power for the blower.
+- **Trial site:** open ground with a test pipe of the same bore, at least a few metres long, chocked so it cannot roll; a rated anchor point behind the station; power for the blower and the battery chargers.
 - **Hand tools at set-up:** 19 mm and 30 mm spanners, torque wrench to 80 N m, 13 mm spanner for M8, rope knife and tape, spring balance, anemometer.
 
 ## 8. Where the numbers come from
 
 - Parametric model: `cad/src/model.py` (STEP and STL in `cad/step` and `cad/stl`).
-- General arrangements: `cad/drawings/SVD-DWG-001` (ring and sheave) and `SVD-DWG-002` (portal station); making sketches `SVD-DWG-101` to `111`.
+- General arrangements: `cad/drawings/SVD-DWG-001` (ring and sheave) and `SVD-DWG-002` (portal station); making sketches `SVD-DWG-101` to `112`.
 - Calculations: `docs/04-calcs/01-sizing.md` (SVD-CAL-001) and `docs/04-calcs/sizing.py`.
 - Bill of materials: `bom/bom.csv`.
 - Pictures: `cad/src/build_plan_media.py`.

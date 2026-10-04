@@ -4,7 +4,7 @@
 
 ![TRL 3](https://img.shields.io/badge/TRL-3%20of%209-0F766E) ![Hardware: CERN-OHL-S-2.0](https://img.shields.io/badge/hardware-CERN--OHL--S--2.0-111827) ![Software: MIT](https://img.shields.io/badge/software-MIT-111827) [![REUSE compliant](https://github.com/BoujeeEnjinia1701/sleevedrift/actions/workflows/reuse.yml/badge.svg)](https://github.com/BoujeeEnjinia1701/sleevedrift/actions/workflows/reuse.yml)
 
-**Area:** Situational field hardware · **TRL:** 3 of 9 (proof of concept on paper; constructable design) · **Value-engineering target:** USD 5,000; estimated parts cost USD 10,804 · **Difficulty:** 4 of 5
+**Area:** Situational field hardware · **TRL:** 3 of 9 (proof of concept on paper; constructable design) · **Value-engineering target:** USD 5,000; estimated parts cost USD 9,867.50 · **Difficulty:** 4 of 5
 
 Equips hand-mining crews inside rescue pipes with a hooded ring, rope-loop sledges and air.
 
@@ -55,7 +55,7 @@ Full problem statement: [docs/01-problem.md](docs/01-problem.md)
 
 Equipment for hand-mining crews working inside an 800 mm rescue pipe during a tunnel collapse. A hooded cutting ring of four bolted steel segments sits in the pipe mouth, held by jacking screws, with its crown running on as a hood over the digger. A train of four low sledges shuttles spoil along the pipe floor between a pull rope and a tail rope that turns round a sheave on the ring; two self-tailing winches at the portal haul it, and breakaway swivels limit the rope to 2.5 kN. A blower at the portal sends about 15 m³/min of fresh air down a layflat duct to a spigot under the hood.
 
-On paper every requirement is met except spoil haulage: with a cordless drill driving each winch at the portal the train moves about 0.42 m³ of spoil an hour (0.22 m³ by hand, the fallback) against a target of 1 m³, and rope wear over a 72-hour shift is at risk on paper, handled by inspecting the ropes every shift and carrying a spare set. Amish's decisions and the open questions are in [docs/06-design-decisions.md](docs/06-design-decisions.md).
+On paper every requirement is met except spoil haulage: by hand the train moves about 0.22 m³ an hour against a target of 1 m³, and rope wear over a 72-hour shift is at risk. The options are with Amish in [docs/06-design-decisions.md](docs/06-design-decisions.md).
 
 Full design precis: [docs/02-concept.md](docs/02-concept.md) · Requirements: [docs/03-requirements.md](docs/03-requirements.md) · Calculations: [docs/04-calcs/01-sizing.md](docs/04-calcs/01-sizing.md) · Prototype build plan: [docs/05-build-plan.md](docs/05-build-plan.md) · Design decisions: [docs/06-design-decisions.md](docs/06-design-decisions.md) · [3D viewer](media/viewer.html)
 

@@ -6,7 +6,8 @@ materials are added for the look. The hero shows the face end: the last 2.8 m of
 cut open on the camera side, with the hooded cutting ring, the face sheave under its cover, the
 two face-end sledges of the train, the ropes, the duct and its outlet spigot, the signal cable
 and the lamp. A posed 1.75 m mannequin stands on the platform beside the pipe's far end, clear of
-the line of sight. The detail view shows the portal haul station. Appearance additions not in
+the line of sight. The detail view shows the portal haul station with a right-angle drill on each
+winch and the drum guards (Amish's decision 24B, 2026-10-03). Appearance additions not in
 model.py, recorded in docs/REVIEW.md: the pipe window and platform slab cropped for the picture
 and the mannequin. CONCEPT, NOT FOR FABRICATION.
 
@@ -35,7 +36,7 @@ RENDER_VIEWS = [
              "sheave, cover and duct spigot"},
     {"name": "detail", "groups": ["station"], "explode": False, "el": 28, "az": -35,
      "note": "Detail from the front right and above (about 28 deg elevation): portal haul station with two "
-             "self-tailing winches on welded trestles with a drill drive on each winch socket, rope bins, anchor slings, blower and the rolled casualty "
+             "self-tailing winches on welded trestles, each turned by a right-angle drill behind a drum guard, rope bins, anchor slings, blower and the rolled casualty "
              "stretcher; layout shortened"},
 ]
 
@@ -62,7 +63,9 @@ LOOK = {  # key: (colour, material, group, exploded offset)
     "trestles": ("#0E7490", "painted steel", "station", (0, 0, 0)),
     "ties": ("#155E75", "painted steel", "station", (0, 0, 0)),
     "winches": ("#D1D5DB", "polished aluminium", "station", (0, 0, 0)),
-    "drills": ("#16A34A", "green plastic power tool", "station", (0, 0, 0)),
+    "drills": ("#DC2626", "red plastic power tool", "station", (0, 0, 0)),
+    "bits": ("#111827", "black oxide steel", "station", (0, 0, 0)),
+    "guards": ("#4B5563", "perforated steel sheet", "station", (0, 0, 0)),
     "bins": ("#F97316", "plastic", "station", (0, 0, 0)),
     "sling": ("#7C3AED", "polyester webbing", "station", (0, 0, 0)),
     "blower": ("#FACC15", "painted steel", "station", (0, 0, 0)),

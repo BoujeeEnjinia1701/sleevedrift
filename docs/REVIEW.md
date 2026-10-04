@@ -1,56 +1,43 @@
 # Review note: SleeveDrift
 
-## Session 2026-10-03: round 2 requirement decisions applied
+## 2026-10-03: Amish's requirement decisions carried out
 
-Amish, 2026-10-03: "i approve all of the 47 recommendations provided by you. Execute them." For SleeveDrift that decides the three requirement decisions of the TRL 3 session below as recommended: 1B (R3), 2A (R9, with the TRL 4 endurance trial deciding whether B is needed) and 3C (R1 stretch). They are recorded in `docs/decisions/0003-requirement-decisions-round2.md` (SVD-DDR-003) and moved to Decisions made in `docs/06-design-decisions.md` (SVD-DEC-001 v0.2). Phase cap TRL 3 kept: no test articles, test plans, firmware, build-log entries or purchasing lists. Nothing was committed or pushed.
+Amish Chadha (owner), 2026-10-03: "i agree with all the 46 recommendations you provided. please proceed." For SleeveDrift that decided items 24B, 25A and 26C as recommended; record SVD-DDR-003 (`docs/decisions/0003-requirement-decisions-2026-10-03.md`). Nothing was committed or pushed.
 
-**What changed.**
+**Changes and new results.**
 
-- **1B, R3: portal drill drive.** `cad/src/model.py`: new `drill_drive()` massing (winch bit, right-angle head, motor body, battery) on each winch socket as the `drills` component (BOM line 30); `winch()` takes `handle=False`, the hand handles stowed as the fallback; the station STEP and STL include the drills. BOM line 30: two sets at USD 350, USD 700.
-- **2A, R9: inspection and spares.** BOM line 31: spare pull and tail rope and a go/no-go wear gauge, USD 236.50, about 15 kg; build plan safety stop 6 now has the gauge check and the swap.
-- **3C, R1 stretch: kept open.** No hardware change; SVD-CAL-001 A5, the requirements and the concept precis say the stretch waits for the co-design partner.
-- `docs/04-calcs/sizing.py` re-run (drill drive as the design rate, hand as fallback, new clutch torque line D6, durability at the drill rate, two new packages): `results.csv` and `docs/04-calcs/01-sizing.md` (SVD-CAL-001 v0.2).
-- Regenerated with the repo's scripts: STEP and STL (`cad/src/model.py`), SVD-DWG-001 (Rev P2, unchanged geometry) and SVD-DWG-002 (Rev P3, drills added) (`cad/src/sheets.py`), concept media and `media/model.glb` at linear deflection 1.0 and angular 0.35 (`cad/src/concept_media.py`), the build plan overview, making sketches, joints and steps (`cad/src/build_plan_media.py`, joint 7 and step 2 now show the drill drive). `cad/src/product_model.py` has the drills in the station detail.
-- Text: `docs/03-requirements.md` v0.4, `docs/02-concept.md` v0.4, `docs/05-build-plan.md` v0.2, `README.md`; `project.yaml` trl_evidence gains SVD-DDR-003.
+- **R3, decision 24B: portal drill drive.** A cordless right-angle drill on a winch bit in each winch socket, motor body outboard, with a perforated-sheet drum guard round the rear of each winch; winch handles stowed as the fallback; nothing extra inside the pipe (R8 still met). `cad/src/model.py` (drills, bits, guards and four new checks; checks OK), STEP and STL regenerated; BOM lines 30 to 33 (USD 700). New result (SVD-CAL-001 v0.2, D4): 14.5 m/min, a 17.3 min cycle, **0.42 m³/h against the 1 m³/h target, still not met**; 0.22 m³/h by hand. Drill safety kept: the clutch at 35 N m slips at 1.55 kN of rope pull in high gear, below the 2.5 kN swivel release; in low gear it would allow 4.8 kN, so the drill is used in high gear only (D6); the trigger has no lock-on; the swivels stay the limit. About 111 Wh an hour of hauling: six 5 Ah batteries and two chargers on portal power (D7). R6 unchanged (3.5 min by hand; 5.1 min with the drill, so hand hauling stays the method). R7: 93 min, about 1.6 h (met on paper).
+- **R9, decision 25A: inspection and a spare set.** BOM line 34 (spare ropes and a 9 mm slot wear gauge, USD 236.50, 15 kg); the shift-change safety stop now inspects both ropes against the gauge and swaps in the spare set if worn. New result (H1 to H3): at the drill rate 72 h is about 250 round trips; R9 is managed by inspection and spares, and the TRL 4 endurance trial decides whether a tougher rope is needed.
+- **R1, decision 26C.** The 600 mm variant waits for the co-design partner; no design change. R1 met for 800 mm; the stretch is open (A5).
+- **Requirements:** `docs/03-requirements.md` v0.4 (status of R1, R3, R8 and R9; targets unchanged, none restated). **Calculations:** `docs/04-calcs/01-sizing.md` v0.2, `sizing.py`, `results.csv`.
+- **Mass and cost:** kit about 328 kg in 13 packages (was 304 kg in 12), heaviest 34.8 kg (R10 met); drill drive package 9.5 kg, ropes and spare set 29.9 kg. Value-engineering target: USD 5,000. Estimated cost of the constructable design: USD 10,804.00 (USD 5,804.00 over the target).
+- **Pictures:** SVD-DWG-002 Rev P3 (station GA with drills and guards); new making sketch SVD-DWG-112 (drum guard); build plan overview, joint 7 (handle stowed), new joint 9 (drill on the winch socket), steps 2 and 3 (guards), new step 15 (drills fitted); concept hero and blueprint (key figure on the drill drive), `flow.png` (now battery to spoil, D8) and `model.glb`. `docs/05-build-plan.md` v0.2 (section 3.12 drum guards, drill drive in bought parts, step 15, first checks for the clutch and haul rate, safety stops 6 and 8).
+- **Register:** `docs/06-design-decisions.md` v0.2: the three items moved to Decisions made; one new open question (below).
+- **Appearance model:** `cad/src/product_model.py` now shows the drills and drum guards in the station detail view; scenes exported to `/home/claude/renders/sleevedrift`. Photoreal renders, captions and cards need redoing on Amish's Mac.
 
-**Requirement status, before and after.**
+### New question for Amish
 
-| ID | Before | After |
-| --- | --- | --- |
-| R3 | Not met, 0.22 m³/h by hand | Not met, 0.42 m³/h with the drill drive (0.22 m³/h by hand, the fallback) |
-| R9 | At risk, about 132 round trips in 72 h | At risk on paper, about 250 round trips at the drill rate; met in practice if a rope swap counts as maintenance; the TRL 4 endurance trial decides on the tougher rope |
-| R1 | Met for 800 mm; 600 mm stretch at risk | Met for 800 mm; 600 mm stretch open, pending the co-design partner |
-| R10 | Met, 304 kg in 12 packages, heaviest 34.8 kg | Met, 326 kg in 14 packages, heaviest 34.8 kg |
+**R3 target.** **Proposed, awaiting Amish.**
 
-R2, R4 to R8, R11 and R12 are unchanged. R4 (hand force) now applies to the fallback; R8 still holds, the drills stay at the portal.
+- *State:* with the decided drill drive the haul moves about 0.42 m³/h against R3's 1 m³/h (SVD-CAL-001, D4). Cause: once the haul is powered, loading and tipping take almost half the 17.3 min cycle; the hand-dug face at Silkyara produced about 0.27 m³/h (D3), so the haul now keeps ahead of the face.
+- *Options:*
+  - **A. Restate R3** as "moves loose spoil 60 m faster than the face it serves produces it; at least 0.4 m³/h with a two-person portal crew". R3: met at 0.42 m³/h on paper. Cost: none. Mass: none.
+  - **B. Keep 1 m³/h** and record R3 as not met until the TRL 4 timed trial. Cost: none. Mass: none.
+  - **C. Add the longer train and faster handling** (six sledges, two people tipping, spoil pre-bagged). R3: about 0.71 m³/h, still not met. Cost: about USD 240 more. Mass: about 15 kg more.
+- *Recommendation:* **A.** The 1 m³/h figure came from the scaffold, not from a face rate; a haul that keeps ahead of hand digging is what the crew needs, and the timed trial confirms the margin. If a powered digging face is ever used, it needs its own haul study.
 
-**Cost.** Estimated cost of the constructable design USD 9,867.50 before, USD 10,804.00 after (USD 700 drill drives, USD 236.50 spare ropes), USD 5,804.00 over the USD 5,000 value-engineering target. `budget_usd` unchanged: it is the value-engineering target (SVD-DDR-001 item 13), and Amish accepted overruns on 2026-10-03.
+### Cross-repo actions
 
-**New questions for Amish.** Each is **Proposed, awaiting Amish**, listed in SVD-DEC-001 as items 4 and 5.
+None.
 
-**4. Drill gear and clutch rule.**
-- *State:* at the winch socket the haul needs 18 N m loaded and 23 N m to start in high gear; the 2.5 kN swivel release corresponds to 57 N m in high gear but only 18 N m in low gear (SVD-CAL-001, D6). The TRL 3 recommendation said the clutch slips before the swivel releases; that holds only in high gear.
-- *Option A:* drill in high gear only, clutch set at about 35 N m, the rule written on each trestle. R3 stays 0.42 m³/h. No cost.
-- *Option B:* clutch set at about 15 N m so it slips first in either gear. The drill cannot start the loaded train in high gear and hauls in low gear at about a third of the speed.
-- *Option C:* no rule; the swivel stays the only limit, as it is for hand cranking.
-- **Recommendation: A.** The swivel is the designed limit in both gears; the rule keeps the clutch as a second, earlier limit in the gear the drill is used in.
+### Safety concerns
 
-**5. R9 wording.**
-- *State:* option 2A meets R9 "in practice if a swap counts as maintenance", while R9 reads "72 hours of continuous operation without failure of rope, pulleys or sledges".
-- *Option A:* restate R9 to allow a worn rope to be swapped as planned maintenance after the shift-change inspection. R9 met in practice on paper; shown in the endurance trial.
-- *Option B:* keep the wording. R9 at risk until the endurance trial.
-- **Recommendation: A.** It states what was chosen in 2A, and the trial still tests it.
+- The drills are powered machinery at the portal: drum guards in place, high gear only, triggers never wedged, stretcher never hauled with a drill, batteries charged in the open away from fuel and the blower intake. The clutch slip setting is a first check at TRL 4.
+- A worn rope is the main 72-hour risk; the shift inspection and spare set manage it but do not prove it.
 
-**Safety notes.**
+### Recommended next step
 
-- The portal drill drive puts a powered tool on the haul. Its dead-man trigger stops the haul when let go; its slip clutch is an earlier limit in high gear only; the breakaway swivels remain the overload limit in every gear and for hand cranking. Build plan safety stop 2 now includes the clutch setting and high gear.
-- The faster haul (14.5 m/min, both ways) means the train reaches the face sooner: hauling still starts only on a clear signal from the face, and nobody is on a rope line or near the sheave while the train moves.
-- At the drill rate the ropes drag about 60 km per metre in 72 h, nearly twice the hand figure; the shift-change inspection against the wear gauge is part of the safety case until the endurance trial gives a wear rate.
-- Battery charging stays at the portal in clean air; nothing powered goes into the pipe beyond lamps, monitors and signals (R8).
-
-**Renders.** The photoreal renders made on Amish's Mac predate this session. The hero view changes slightly (drills on the winches at the station in the background); the detail view of the portal station changes visibly (drill drives on both winch sockets, hand handles gone) and needs a re-render. The exploded ring view is unchanged.
-
-**Recommended next step.** Amish decides items 4 and 5. The design is then ready for TRL 4 when the phase allows: build the ring and a short test pipe, load test the hood and the ring's hold on CalRig, release test the swivel pins and set the drill clutches, then a timed haul with the drill drive and by hand, the casualty drill and the 72 h endurance run that settles the rope.
+Amish decides the R3 target question. The design is then ready for TRL 4 when the phase allows, as recommended below.
 
 ## Session 2026-10-03: TRL 3 (kit 1.7.0, /to-trl3 under Amish's pre-approvals)
 
@@ -174,3 +161,27 @@ Each item below is **Proposed, awaiting Amish**, and is listed in `docs/06-desig
 ## 2026-10-03: photoreal renders
 
 Rendered with Blender Cycles on Amish's Mac from `cad/src/product_model.py`; captioned with `.kit/photo_caption.py`; `media/card.png` and `media/social-preview.png` made with `.kit/cards.py`. Views: hero, exploded, detail. image_qc passes and `render.py --check` has no FAIL.
+
+## 2026-10-04: Amish's requirement decisions carried out (round 3)
+
+Amish on 2026-10-04: "For round 3, I agree with all your proposed recommendations". For SleeveDrift this decides open decision 1 of SVD-DEC-001 as recommended (4A). Recorded in `docs/decisions/0004-r3-restated.md` (SVD-DDR-004). Wording and records only; no geometry. Not committed or pushed.
+
+### Changes
+
+- `docs/03-requirements.md` v0.5: R3 restated as "moves loose spoil faster than the face produces it; at least 0.4 m3/h"; Amish quoted; count of requirements met updated.
+- `docs/04-calcs/01-sizing.md`: summary, section D and the results table now say R3 is met as restated.
+- `docs/06-design-decisions.md` v0.3: open decision 1 moved to Decisions made; Open decisions now "None."
+- No model, BOM, drawing or media change was needed.
+
+### New results
+
+- R3: met as restated, 0.42 m3/h against at least 0.4 m3/h (hand-dug faces about 0.27 m3/h; hand fallback 0.22 m3/h).
+- Other requirements, cost and mass unchanged.
+
+### For Amish
+
+Nothing new.
+
+## 2026-10-04: photoreal renders redone after the round-2 and round-3 decisions
+
+Views: hero, exploded, detail; cards regenerated; image_qc passes and `render.py --check` has no FAIL.

@@ -4,7 +4,7 @@ Run from the repo root:  python cad/src/build_plan_media.py [overview|sheets|joi
 With no argument it draws everything. Every picture is drawn from cad/src/model.py, so the
 pictures and the model never disagree:
     docs/05-build-plan/overview.png       every component pulled apart, numbered in build order
-    cad/drawings/SVD-DWG-101 to 111       making sketches for the made components
+    cad/drawings/SVD-DWG-101 to 112       making sketches for the made components
     docs/05-build-plan/joint-NN.png       close-ups of the joints that need explaining
     docs/05-build-plan/step-NN.png        one picture per assembly step
 Uses .kit/build_views.py. BUILD PLAN ILLUSTRATION, PLAN NOT YET BUILT.
@@ -36,8 +36,9 @@ COL = {"bottom": "#0F766E", "side_p": "#14B8A6", "side_m": "#14B8A6", "crown": "
        "jacks": "#1D4ED8", "sheave": "#D4A017", "sheave_hw": "#6B7280", "cover": "#475569", "spigot": "#7C3AED",
        "lamp": "#FACC15", "sledges": "#2563EB", "runners": "#94A3B8", "links": "#111827", "swivels": "#DC2626",
        "ropes": "#E11D48", "trestles": "#0E7490", "ties": "#155E75", "winches": "#6B7280", "bins": "#F97316",
+       "drills": "#DC2626", "bits": "#111827", "guards": "#475569",
        "sling": "#FB923C", "blower": "#CA8A04", "duct": "#65A30D", "hangers": "#374151", "cable": "#111827",
-       "stretcher": "#EA580C", "spreader": "#7C2D12", "bridle": "#E11D48", "pipe": "#D1D5DB", "drills": "#16A34A"}
+       "stretcher": "#EA580C", "spreader": "#7C2D12", "bridle": "#E11D48", "pipe": "#D1D5DB"}
 
 
 def part(name, shape, key, explode=(0, 0, 0)):
@@ -67,23 +68,27 @@ def overview():
         ("Winch trestles (2)", ST["trestles"], "trestles", (1400, ty, 0)),
         ("Trestle cross ties (4)", ST["ties"], "ties", (1400, ty, 300)),
         ("Stretcher spreader bar", CP["spreader"], "spreader", (-1200, cy, 0)),
+        ("Winch drum guards (2)", ST["guards"], "guards", (1400, ty, 800)),
         ("Segment joint bolts (16), bought", R["joint_bolts"], "joint_bolts", (-800, 0, -300)),
         ("Face return sheave, bought", R["sheave"], "sheave", (800, 0, 0)),
         ("Sledge runners, bought strip", SL["runners"], "runners", (-500, sy, -150)),
         ("Self-tailing winches (2), bought", ST["winches"], "winches", (1400, ty, 500)),
-        ("Portal drill drives (2), bought", ST["drills"], "drills", (1400, ty, 800)),
+        ("Right-angle drills on winch bits (2), bought", ST["drills"] + ST["bits"], "drills", (1400, ty, 1100)),
         ("Roll-up stretcher, bought", CP["stretcher"], "stretcher", (-1200, cy, 0)),
     ]
     parts = [part(n, s, k, e) for n, s, k, e in items]
     bv.overview(parts, OUT / "overview.png", "SleeveDrift prototype: every component in build order",
-                subtitle="Made parts first (1 to 11), then the main bought parts; ropes, duct, blower, signal line, lamps, monitors and tools not shown",
+                subtitle="Made parts first (1 to 12), then the main bought parts; ropes, duct, blower, signal line, lamps, monitors and tools not shown",
                 key=True, size=(11, 7.5))
 
 
 # ----------------------------------------------------------------- making sketches
 def sheets():
     ring_n = [Part(k, R[k], "#D1D5DB") for k in ("crown", "side_p", "side_m", "bottom", "cover", "sheave", "spigot")]
-    st_n = [Part(k, v, "#D1D5DB") for k, v in ST.items() if k not in ("sling", "bins")]
+    st_n = [Part(k, v, "#D1D5DB") for k, v in ST.items() if k not in ("sling", "bins", "drills", "bits", "guards")]
+    xw, yA = P["winch_x"], P["winch_y"][0]
+    gd_n = [Part("winch", crop(ST["winches"], xw - 300, xw + 300, yA - 300, yA + 300, 0, 1000), "#D1D5DB"),
+            Part("plate", crop(ST["trestles"], xw - 300, xw + 300, yA - 300, yA + 300, 540, 600), "#D1D5DB")]
     S = [
         ("SVD-DWG-101", "Bottom segment with sheave bracket: making sketch", R["bottom"], "bottom", ring_n,
          "5 mm S355 plate, 50 x 10 and 60 x 10 flat, 10 mm plate, 25 mm and 20 mm bar",
@@ -174,6 +179,14 @@ def sheets():
           "Bridle legs of 10 mm rope from the bar ends to the stretcher's head grommets",
           "The breakaway swivel clips to the eye",
           "Check: the bar sits square when both legs are pulled"]),
+        ("SVD-DWG-112", "Winch drum guard: making sketch", crop(ST["guards"], xw - 300, xw + 300, yA - 300, yA + 300, 0, 1000), "guards", gd_n,
+         "2 mm perforated steel sheet, 30 x 5 mm flat bar",
+         ["Two alike: a hoop 260 outside diameter round the rear 120 deg of the winch",
+          "Sheet 2 mm perforated, 175 high, rolled; top edge 790 above the ground",
+          "Two legs 30 x 5 flat, 65 long, welded inside the hoop 10 deg in from each end",
+          "Each leg turned out at the foot and bolted M8 into the trestle top plate",
+          "Open toward the pipe (+X) so the rope reaches the drum",
+          "Check: 10 clear of the drum and rope; nothing to catch a sleeve"]),
     ]
     for dwg, title, shape, key, nb, mat, notes in S:
         bv.component_sheet(Part(title, shape, COL[key]), nb, "SleeveDrift", dwg, title, mat, notes, DATE, out_dir=str(DWG))
@@ -239,15 +252,25 @@ def joints():
     yA = P["winch_y"][0]
     r7 = (xw - 200, xw + 200, yA - 260, yA + 260, 480, 1000)
     bv.joint([part("Trestle top rails and plate", crop(ST["trestles"], *r7), "trestles"),
-              part("Self-tailing winch", crop(ST["winches"], *r7), "winches"),
-              part("Drill drive on the winch socket", crop(ST["drills"], xw - 450, xw + 200, yA - 260, yA + 260, 480, 1000), "drills")],
-             OUT / "joint-07.png", "Joint 7: winch on its trestle, drill drive on the socket", "Winch base bolted through the 10 mm top plate; winch bit in the handle socket", elev=22, azim=-55)
+              part("Self-tailing winch (handle stowed)", crop(ST["winches"], *r7), "winches")],
+             OUT / "joint-07.png", "Joint 7: winch on its trestle", "Winch base bolted through the 10 mm top plate with its own bolts", elev=22, azim=-55)
     # 8 anchor eye and sling
     x0 = -P["trestle"][0]
     r8 = (x0 - 300, x0 + 60, yA - 60, yA + 60, 480, 760)
     bv.joint([part("Trestle rear rail and anchor eye", crop(ST["trestles"], *r8), "trestles"),
               part("Bow shackle and round sling", crop(ST["sling"], *r8), "sling")],
              OUT / "joint-08.png", "Joint 8: sling on the anchor eye", "The sling runs level at rope height to a structural anchor behind", elev=20, azim=-60)
+
+
+    # 9 drill on its winch bit in the winch socket, behind the drum guard
+    r9 = (xw - 220, xw + 220, yA - 560, yA + 200, 560, 1000)
+    bv.joint([part("Trestle top plate", crop(ST["trestles"], *r9), "trestles"),
+              part("Winch and socket", crop(ST["winches"], *r9), "winches"),
+              part("Drum guard", crop(ST["guards"], *r9), "guards"),
+              part("Winch bit", crop(ST["bits"], *r9), "bits"),
+              part("Right-angle drill", crop(ST["drills"], *r9), "drills")],
+             OUT / "joint-09.png", "Joint 9: drill on the winch socket", "Winch bit in the socket, drill body outboard; guard round the rear of the drum",
+             elev=22, azim=-55)
 
 
 # ----------------------------------------------------------------- steps
@@ -259,6 +282,9 @@ def steps():
         n += 1
         if n < int(__import__("os").environ.get("SKIP_TO", "0")):
             return
+        only = __import__("os").environ.get("ONLY")
+        if only and str(n) not in only.split(","):
+            return
         done = [p for p in done if p.shape.volume > 1.0]
         bv.step(done, new, OUT / f"step-{n:02d}.png", title, sub, context=context, label_done=False, size=size, elev=elev, azim=azim)
 
@@ -268,15 +294,15 @@ def steps():
     tB = part("Trestle B", trestle_shape(P, 0.0, yB), "trestles")
     ties = part("Cross ties (4)", ST["ties"], "ties")
     win = part("Self-tailing winches", ST["winches"], "winches")
-    drl = part("Portal drill drives", ST["drills"], "drills")
+    grd = part("Drum guards", ST["guards"], "guards")
     sl = part("Round slings and shackles", ST["sling"], "sling")
     bins = part("Rope bins", ST["bins"], "bins")
     mv = lambda p, e: Part(p.name, p.shape, p.color, None, e)  # noqa: E731
     shot([tA], [mv(tB, (0, 400, 0)), mv(ties, (0, 0, 300))], "Step 1: set the trestles and bolt the cross ties",
          "On level ground 5.5 m behind the pipe mouth, in line with it; M10 bolts")
-    shot([tA, tB, ties], [mv(win, (0, 0, 300)), mv(drl, (0, 0, 550))], "Step 2: bolt the winches to the top plates; drill drives on the sockets",
-         "Winch A (pull rope) on -Y, winch B (tail rope) on +Y; winch bits in the handle sockets, high gear")
-    shot([tA, tB, ties, win, drl], [mv(sl, (-300, 0, 0)), mv(bins, (0, 0, 300))], "Step 3: slings to the structural anchor; rope bins out",
+    shot([tA, tB, ties], [mv(win, (0, 0, 300)), mv(grd, (-300, 0, 300))], "Step 2: bolt the winches and drum guards to the top plates",
+         "Winch A (pull rope) on the -Y trestle, winch B (tail rope) on the +Y trestle; guards behind the drums")
+    shot([tA, tB, ties, win, grd], [mv(sl, (-300, 0, 0)), mv(bins, (0, 0, 300))], "Step 3: slings to the structural anchor; rope bins out",
          "Slings level at rope height, tight; never to the pipe-pushing machine")
     pipe = ctx_pipe()
     bot, sp, sm, cr = (part("Bottom segment", R["bottom"], "bottom"), part("Side segment (+Y)", R["side_p"], "side_p"),
@@ -322,6 +348,9 @@ def steps():
          elev=62, azim=-125)
     shot([part("Stretcher (rolled)", CP["stretcher"], "stretcher")], [part("Spreader bar and bridle", CP["spreader"] + CP["bridle"], "spreader", (400, 0, 0))],
          "Step 14: casualty stretcher ready at the portal", "Spreader bar on the head grommets; swivels clip to its eye in place of the train", size=(8, 5))
+    dr = part("Drills on winch bits (2)", ST["drills"] + ST["bits"], "drills")
+    shot([tA, tB, ties, win, grd], [mv(dr, (0, 0, 300))], "Step 15: drills on the winch sockets for hauling",
+         "High gear only; clutch about 35 N m; handles stowed for hand cranking")
     print("steps", n)
 
 
