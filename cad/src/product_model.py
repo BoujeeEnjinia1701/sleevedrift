@@ -1,15 +1,18 @@
-"""SleeveDrift product appearance model (build123d), TRL 3, constructable design (SVD-DDR-002).
+"""SleeveDrift product appearance model for photoreal renders (STANDARDS sections 12 and 24), TRL 3.
 
-For photoreal renders only (.kit/export_views.py, then .kit/photoreal.py on Amish's Mac). Every
-part is the model.py solid itself, in the shortened picture layout of model.py; colours and
-materials are added for the look. The hero shows the face end: the last 2.8 m of the rescue pipe,
-cut open on the camera side, with the hooded cutting ring, the face sheave under its cover, the
-two face-end sledges of the train, the ropes, the duct and its outlet spigot, the signal cable
-and the lamp. A posed 1.75 m mannequin stands on the platform beside the pipe's far end, clear of
-the line of sight. The detail view shows the portal haul station with a right-angle drill on each
-winch and the drum guards (Amish's decision 24B, 2026-10-03). Appearance additions not in
-model.py, recorded in docs/REVIEW.md: the pipe window and platform slab cropped for the picture
-and the mannequin. CONCEPT, NOT FOR FABRICATION.
+Every product part is a part of components(CHOSEN) from cad/src/model.py exactly as it is (option A, the rope
+shuttle of sledges, proposed): hooded ring segments, bands, welds, weld nuts, joint bolts, jacking screws, sheave,
+sledges with runners, links and swivels, ropes, trestles, ties, slings, winches, drills, guards, blower, duct,
+cable, stretcher and every fastener. Parts that run the whole length of the shortened layout (ropes, duct, cable,
+runners, the pipe) are cut at the edge of the picture window; nothing is added to a part. Only the site is
+added, as context parts: a tunnel floor slab, the tunnel wall behind the pipe, the debris heap the pipe has been
+pushed into and a 1.75 m mannequin standing on the floor for scale. The hero is rendered by .kit/photoreal.py
+as an outdoor scene on a concrete floor at model z = 0 (RENDER_VIEWS "args"); every site part reaches below
+the ground. The studio view is the portal haul station alone.
+APPEARANCE MODEL ONLY. CONCEPT, NOT FOR FABRICATION.
+
+Groups: "face" (the face end of the pipe with the ring and the first sledges), "station" (the portal haul
+station), "context" (site and mannequin).
 
     from product_model import product_parts
     for p in product_parts(): print(p["name"], p["group"], p["material"])
@@ -17,99 +20,85 @@ and the mannequin. CONCEPT, NOT FOR FABRICATION.
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
-sys.path[:0] = [str(ROOT / ".kit"), str(ROOT / "cad" / "src")]
-from build123d import Pos  # noqa: E402
-from model import PARAMS as P, build_components, context_shapes, bx  # noqa: E402
+HERE = Path(__file__).resolve().parent
+sys.path[:0] = [str(HERE), str(HERE.parents[1] / ".kit")]
+
+from build123d import Box, Pos  # noqa: E402
+import model as M  # noqa: E402
+from cad_parts import part  # noqa: E402
+from sd_parts import bx, prism_xz  # noqa: E402
 
 TITLE = "SleeveDrift: hand-mining kit for crews inside a rescue pipe"
 
+_SITE = ["--scene=outdoor", "--ground=concrete", "--ground-z=0", "--sun=38,-75", "--lens=40"]
 RENDER_VIEWS = [
-    {"name": "hero", "groups": ["ring", "haul", "context"], "explode": False, "el": 22, "az": -40,
-     "note": "Product render from the front right and above (about 22 deg elevation): the face end of an 800 mm "
-             "rescue pipe, cut open on the near side, with the hooded cutting ring, the face sheave under its "
-             "kneeling cover, two spoil sledges on the haul rope, the air duct and the signal line; a 1.75 m person "
-             "stands beside the pipe for scale"},
-    {"name": "exploded", "groups": ["ring"], "explode": True, "el": 26, "az": -50,
-     "note": "Exploded hooded cutting ring from the front right and above (about 26 deg elevation): crown segment "
-             "with hood, two side segments, bottom segment with the sheave bracket, joint bolts, jacking screws, "
-             "sheave, cover and duct spigot"},
-    {"name": "detail", "groups": ["station"], "explode": False, "el": 28, "az": -35,
-     "note": "Detail from the front right and above (about 28 deg elevation): portal haul station with two "
-             "self-tailing winches on welded trestles, each turned by a right-angle drill behind a drum guard, rope bins, anchor slings, blower and the rolled casualty "
-             "stretcher; layout shortened"},
+    {"name": "hero", "groups": ["face", "context"], "explode": False, "el": 20, "az": -42, "args": _SITE,
+     "note": "Site render from the front right and above (about 20 deg elevation): the face end of an 800 mm rescue "
+             "pipe pushed into a collapse in a tunnel, cut open on the near side to show the hooded cutting ring, the "
+             "face sheave under its kneeling cover, two spoil sledges on the haul rope, the air duct and the signal line; "
+             "a 1.75 m person stands on the tunnel floor behind the pipe for scale"},
+    {"name": "studio", "groups": ["station"], "explode": False, "el": 28, "az": -35,
+     "note": "Studio render from the front right and above (about 28 deg elevation): the portal haul station with "
+             "two self-tailing winches on welded trestles, each turned by a right-angle drill behind a drum guard, "
+             "rope bins, anchor slings, ventilation blower and the rolled casualty stretcher; layout shortened"},
 ]
 
-LOOK = {  # key: (colour, material, group, exploded offset)
-    "bottom": ("#0F766E", "painted steel", "ring", (0, 0, -350)),
-    "side_p": ("#14B8A6", "painted steel", "ring", (0, 450, 0)),
-    "side_m": ("#14B8A6", "painted steel", "ring", (0, -450, 0)),
-    "crown": ("#C2410C", "painted steel", "ring", (0, 0, 450)),
-    "joint_bolts": ("#9CA3AF", "zinc plated steel", "ring", (0, 0, 0)),
-    "jacks": ("#1D4ED8", "zinc plated steel", "ring", (0, 0, 700)),
-    "sheave": ("#D4A017", "zinc plated steel", "ring", (0, 0, 150)),
-    "sheave_hw": ("#6B7280", "steel", "ring", (0, 0, 200)),
-    "cover": ("#374151", "chequer plate steel", "ring", (0, 0, 350)),
-    "spigot": ("#7C3AED", "painted steel", "ring", (-500, 0, 250)),
-    "lamp": ("#FACC15", "plastic", "ring", (0, 0, 900)),
-    "sledges": ("#2563EB", "galvanised steel", "haul", (0, 0, 0)),
-    "runners": ("#F8FAFC", "white plastic", "haul", (0, 0, 0)),
-    "links": ("#111827", "steel", "haul", (0, 0, 0)),
-    "swivels": ("#DC2626", "painted steel", "haul", (0, 0, 0)),
-    "ropes": ("#E11D48", "polyester rope", "haul", (0, 0, 0)),
-    "duct": ("#FDE047", "yellow vinyl duct", "haul", (0, 0, 0)),
-    "hangers": ("#111827", "steel", "haul", (0, 0, 0)),
-    "cable": ("#111827", "rubber cable", "haul", (0, 0, 0)),
-    "trestles": ("#0E7490", "painted steel", "station", (0, 0, 0)),
-    "ties": ("#155E75", "painted steel", "station", (0, 0, 0)),
-    "winches": ("#D1D5DB", "polished aluminium", "station", (0, 0, 0)),
-    "drills": ("#DC2626", "red plastic power tool", "station", (0, 0, 0)),
-    "bits": ("#111827", "black oxide steel", "station", (0, 0, 0)),
-    "guards": ("#4B5563", "perforated steel sheet", "station", (0, 0, 0)),
-    "bins": ("#F97316", "plastic", "station", (0, 0, 0)),
-    "sling": ("#7C3AED", "polyester webbing", "station", (0, 0, 0)),
-    "blower": ("#FACC15", "painted steel", "station", (0, 0, 0)),
-    "stretcher": ("#EA580C", "orange plastic", "station", (0, 0, 0)),
-    "spreader": ("#7C2D12", "painted steel", "station", (0, 0, 0)),
-    "bridle": ("#E11D48", "polyester rope", "station", (0, 0, 0)),
-}
+FACE_WIN = (-3200.0, 1500.0)      # mm behind and ahead of Lp, the pipe mouth at the face
+STATION_WIN = (-9000.0, 1200.0)   # absolute x, mm, of the station picture window
 
 
-def product_parts(P=P):
-    S = P["short"]
-    Lp, xs = S["Lp"], S["x_stand"]
-    C = build_components(P, short=True)
-    X = context_shapes(P, Lp, xs, cut=True)
-    face = bx(Lp - 2800, Lp + 700, -1000, 1000, -50, 1000)
-    port = bx(xs - 2000, xs + 2200, -2000, 2000, -50, 1500)
+def _window(shape, x0, x1):
+    """The part of a shape between x0 and x1, or None if it lies outside."""
+    bb = shape.bounding_box()
+    if bb.max.X < x0 or bb.min.X > x1:
+        return None
+    if bb.min.X >= x0 and bb.max.X <= x1:
+        return shape
+    cut = shape & (Pos((x0 + x1) / 2, 0, 500) * Box(x1 - x0, 6000, 6000))
+    return cut if cut.volume > 1e-6 else None
+
+
+def site():
+    """Tunnel floor, wall and rubble face at the pipe's end, and a mannequin. Ground level is model z = 0
+    (photoreal --ground-z=0); every site part reaches 300 mm below it."""
+    Lp, xs = M.layout(True)
     out = []
-
-    def add(name, shape, color, material, bom, group, explode):
-        out.append({"name": name, "shape": shape, "color": color, "material": material,
-                    "bom": bom, "group": group, "explode": tuple(float(v) for v in explode)})
-
-    for k, c in C.items():
-        color, mat, grp, ex = LOOK[k]
-        shape = c.shape
-        if grp == "haul":
-            shape = shape & face
-            if shape.volume < 1.0:
-                continue
-        if grp == "station":
-            shape = shape & port
-            if shape.volume < 1.0:
-                continue
-        add(c.name, shape, color, mat, c.bom, grp, ex)
-    # context for the hero: pipe window, platform, and a person standing clear of the line of sight
-    add("Rescue pipe, 800 mm, cut open (context)", X["pipe"] & face, "#9CA3AF", "weathered steel", None, "context", (0, 0, 0))
-    add("Platform (context)", bx(Lp - 4400, Lp + 700, -1400, 1400, -60, 0), "#D6D3D1", "concrete", None, "context", (0, 0, 0))
-    from context_parts import mannequin
-    person = Pos(Lp - 3800.0, 900.0, 0) * mannequin(1750, "stand")
-    add("Person, 1.75 m (scale)", person, "#D1D5DB", "clay", None, "context", (0, 0, 0))
+    ctx = lambda n, sh, mat: out.append(part(f"{n} (site)", sh, mat, kind="context", group="context"))
+    ctx("Tunnel floor slab", bx(Lp + FACE_WIN[0] - 2500, Lp + 5200, -4200, 4200, -300, 0), "concrete")
+    ctx("Tunnel wall behind the pipe", bx(Lp + FACE_WIN[0] - 2500, Lp + 5200, 2600, 2900, -300, 3600), "concrete")
+    # collapse debris the pipe has been pushed into: a heap across the tunnel, in front of the ring
+    heap = [(Lp + 700, -300), (Lp + 700, 1150), (Lp + 1100, 1500), (Lp + 1700, 1380), (Lp + 2300, 1850), (Lp + 3200, 1250),
+            (Lp + 4200, 700), (Lp + 5200, -300)]
+    ctx("Collapse debris at the face", prism_xz(heap, -4200, 2600), "soil")
+    try:
+        import context_parts
+        man = Pos(Lp - 2600.0, 1500.0, 0) * context_parts.mannequin(1750.0, "stand")
+        out.append(part("Person 1.75 m (scale)", man, "skin", kind="context", group="context"))
+    except Exception as e:   # the mannequin is for scale only; never block the product parts
+        print("mannequin not added:", e)
     return out
 
 
+def product_parts():
+    Lp, xs = M.layout(True)
+    out = []
+    for p in M.components(M.CHOSEN):
+        for grp, (x0, x1) in (("face", (Lp + FACE_WIN[0], Lp + FACE_WIN[1])), ("station", STATION_WIN)):
+            if p["kind"] == "context":
+                if grp == "station" or "Rescue pipe" not in p["name"]:
+                    continue
+            sh = _window(p["shape"], x0, x1)
+            if sh is None:
+                continue
+            q = dict(p)
+            q["shape"], q["group"] = sh, grp
+            if p["kind"] == "context":
+                q["group"] = "context"
+            out.append(q)
+    return out + site()
+
+
 if __name__ == "__main__":
-    for p in product_parts():
-        s = p["shape"]
-        print(f"{p['name']:44s} {p['group']:9s} {p['material']:20s} vol={s.volume / 1000:9.1f} cm3")
+    ps = product_parts()
+    import collections
+    print(len(ps), "parts;", dict(collections.Counter(p["group"] for p in ps)))

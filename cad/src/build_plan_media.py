@@ -1,8 +1,8 @@
 """SleeveDrift prototype build plan pictures (SVD-BLD-001, STANDARDS section 18).
 
 Run from the repo root:  python cad/src/build_plan_media.py [overview|sheets|joints|steps ...]
-With no argument it draws everything. Every picture is drawn from cad/src/model.py, so the
-pictures and the model never disagree:
+With no argument it draws everything. Every picture is drawn from the kit 1.9 detailed parts in cad/src/model.py (grouped by the
+`group` key of each part), so the pictures and the model never disagree:
     docs/05-build-plan/overview.png       every component pulled apart, numbered in build order
     cad/drawings/SVD-DWG-101 to 112       making sketches for the made components
     docs/05-build-plan/joint-NN.png       close-ups of the joints that need explaining
@@ -17,17 +17,59 @@ sys.path[:0] = [str(ROOT / ".kit"), str(ROOT / "cad" / "src")]
 import build_views as bv  # noqa: E402
 from build_views import Part  # noqa: E402
 from build123d import Pos  # noqa: E402
-from model import (PARAMS as P, derived, ring_parts, sledge, station_parts, casualty_parts, build_components,  # noqa: E402
-                   context_shapes, at, bx, link_between, swivel, xcyl)
+from build123d import Compound  # noqa: E402
+from model import (PARAMS as P, derived, face_end, station_parts, casualty_parts, sledge_parts, link_parts, swivel_parts,  # noqa: E402
+                   trestle_parts, option_a, context_parts, grouped, layout)
+from sd_parts import at_ring, bx, xcyl  # noqa: E402
+from types import SimpleNamespace  # noqa: E402
+
+
+def U(*shapes):
+    """Several shapes as one Compound, without a boolean fuse."""
+    out = []
+    for s in shapes:
+        out += list(s) if isinstance(s, (list, tuple)) else [s]
+    return Compound(out)
+
+
+def at(Pd, r, th, x):
+    return at_ring(Pd["zc"], r, th, x)
+
+
+def GC(parts):
+    """{group: SimpleNamespace(name, shape)} of a list of parts, like the old build_components."""
+    return {k: SimpleNamespace(name=k, shape=v) for k, v in grouped(parts).items()}
+
+
+def link_between(Pd, xa, xb):
+    return U([p["shape"] for p in link_parts(Pd, xa, xb, "1", False)])
+
+
+def swivel(Pd, x_hole, direction):
+    parts, xe = swivel_parts(Pd, x_hole, direction, "1", False)
+    return U([p["shape"] for p in parts]), xe
+
+
+def trestle_shape(Pd, xs, yc):
+    return U([p["shape"] for p in trestle_parts(Pd, xs, yc, "A", False)])
+
+
+def sledge_groups(Pd, x0):
+    return grouped(sledge_parts(Pd, x0, "1", False))
+
+
+def context_shapes(Pd, Lp, xs, cut=True):
+    return {"pipe": context_parts(Pd, Lp, xs, cut)[0]["shape"]}
+
 
 OUT = ROOT / "docs" / "05-build-plan"
 DWG = ROOT / "cad" / "drawings"
-DATE = "2026-10-03"
+DATE = "2026-11-02"
 D = derived(P)
-R = ring_parts(P, 0.0)                    # face end with the pipe mouth at x = 0
-ST = station_parts(P, 0.0)                # station with its front at x = 0
-CP = casualty_parts(P, 0.0, 0.0)
-SL = sledge(P, 0.0)
+R = grouped(face_end(P, 0.0))             # face end with the pipe mouth at x = 0
+ST = grouped(station_parts(P, 0.0, False))   # station with its front at x = 0
+CP = grouped(casualty_parts(P, 0.0, 0.0, False))
+SL = sledge_groups(P, 0.0)
 PR = dict(P, zc=P["zc"] - P["ring_drop"])  # ring axis frame
 Do, tw = P["pipe"]
 PIPE_WIN = (xcyl(0, P["zc"], Do / 2, -900, 0) - xcyl(0, P["zc"], Do / 2 - tw, -901, 1)) - bx(-910, 10, -Do, 0, P["zc"], P["zc"] + Do)
@@ -58,13 +100,13 @@ def overview():
     sy, ty, cy = -1700.0, 2300.0, -2900.0
     items = [
         ("Bottom segment with sheave bracket", R["bottom"], "bottom", (0, 0, -350)),
-        ("Side segments (2)", Pos(0, 550, 0) * R["side_p"] + Pos(0, -550, 0) * R["side_m"], "side_p", (0, 0, 0)),
+        ("Side segments (2)", U(Pos(0, 550, 0) * R["side_p"], Pos(0, -550, 0) * R["side_m"]), "side_p", (0, 0, 0)),
         ("Crown segment with hood", R["crown"], "crown", (0, 0, 550)),
         ("Jacking screws with swivel pads (4)", R["jacks"], "jacks", (0, 0, 1000)),
         ("Sheave spacer and keeper", R["sheave_hw"], "sheave_hw", (800, 0, 150)),
         ("Sheave cover and kneeling plate", R["cover"], "cover", (800, 0, 350)),
         ("Duct outlet spigot", R["spigot"], "spigot", (-800, 0, 450)),
-        ("Spoil sledge (4 alike)", SL["tray"] + SL["lugs"], "sledges", (-500, sy, 0)),
+        ("Spoil sledge (4 alike)", SL["sledges"], "sledges", (-500, sy, 0)),
         ("Winch trestles (2)", ST["trestles"], "trestles", (1400, ty, 0)),
         ("Trestle cross ties (4)", ST["ties"], "ties", (1400, ty, 300)),
         ("Stretcher spreader bar", CP["spreader"], "spreader", (-1200, cy, 0)),
@@ -73,7 +115,7 @@ def overview():
         ("Face return sheave, bought", R["sheave"], "sheave", (800, 0, 0)),
         ("Sledge runners, bought strip", SL["runners"], "runners", (-500, sy, -150)),
         ("Self-tailing winches (2), bought", ST["winches"], "winches", (1400, ty, 500)),
-        ("Right-angle drills on winch bits (2), bought", ST["drills"] + ST["bits"], "drills", (1400, ty, 1100)),
+        ("Right-angle drills on winch bits (2), bought", U(ST["drills"], ST["bits"]), "drills", (1400, ty, 1100)),
         ("Roll-up stretcher, bought", CP["stretcher"], "stretcher", (-1200, cy, 0)),
     ]
     parts = [part(n, s, k, e) for n, s, k, e in items]
@@ -146,7 +188,7 @@ def sheets():
           "Sits in the two crown saddles; held with two band clamps",
           "Its front end is 50 past the pipe mouth, under the hood",
           "Check: the duct end slides over it by hand"]),
-        ("SVD-DWG-108", "Spoil sledge: making sketch", SL["tray"] + SL["lugs"] + SL["runners"], "sledges",
+        ("SVD-DWG-108", "Spoil sledge: making sketch", U(SL["sledges"], SL["runners"]), "sledges",
          [Part("ropes", SL["runners"], "#D1D5DB")],
          "1.5 mm galvanised sheet, 8 mm plate, UHMW-PE strip",
          ["Tray: base 160 wide, sides flaring to 300 at 130 high, 1,000 long; folded in one piece",
@@ -210,7 +252,7 @@ def joints():
     r2 = (P["jack_x"] - 40, P["jack_x"], c[1] - 70, c[1] + 70, c[2] - 90, c[2] + 60)
     bv.joint([part("Crown shell and weld nut", crop(R["crown"], *r2), "crown"),
               part("M20 screw and swivel pad", crop(R["jacks"], *r2), "jacks"),
-              part("Rescue pipe wall", crop(PIPE_WIN + (xcyl(0, P["zc"], Do / 2, -900, 0) - xcyl(0, P["zc"], Do / 2 - tw, -901, 1)), *r2), "pipe")],
+              part("Rescue pipe wall", crop(PIPE_WIN, *r2), "pipe")],
              OUT / "joint-02.png", "Joint 2: jacking screw pressing the pad on the pipe", "Cut through the screw: nut welded inside the shell, pad against the pipe wall",
              elev=10, azim=-90)
     # 3 face sheave on its pin, cut through the pin
@@ -223,23 +265,23 @@ def joints():
              OUT / "joint-03.png", "Joint 3: face sheave on its pin, under the cover", "Cut through the pin: plate, spacer, sheave, keeper and R-clip, cover above",
              elev=12, azim=-90)
     # 4 sledge link
-    s1, s2 = sledge(P, 0.0), sledge(P, -1150.0)
+    s1, s2 = sledge_groups(P, 0.0), sledge_groups(P, -1150.0)
     lk = link_between(P, -150.0 + 30, -30.0)
     r4 = (-260, 110, -120, 120, 20, 180)
-    bv.joint([part("Sledge end and lug", crop(s1["tray"] + s1["lugs"], *r4), "sledges"),
-              part("Next sledge end and lug", crop(s2["tray"] + s2["lugs"], *r4), "runners"),
+    bv.joint([part("Sledge end and lug", crop(s1["sledges"], *r4), "sledges"),
+              part("Next sledge end and lug", crop(s2["sledges"], *r4), "runners"),
               part("Connecting link and pins", lk, "links")],
              OUT / "joint-04.png", "Joint 4: link between two sledges", "Pins through the 16 mm lug holes; split pins keep them in", elev=30, azim=-60)
     # 5 breakaway swivel at the train front
     sw, xe = swivel(P, -30.0, -1)
     rope = xcyl(0, D["lug_z"] - 1.0, 5, xe - 250, xe)
     r5 = (-420, 110, -120, 120, 20, 180)
-    bv.joint([part("Front sledge lug", crop(s1["tray"] + s1["lugs"], *r5), "sledges"),
+    bv.joint([part("Front sledge lug", crop(s1["sledges"], *r5), "sledges"),
               part("Breakaway swivel, 2.5 kN", sw, "swivels"),
               part("Pull rope with eye splice", rope, "ropes")],
              OUT / "joint-05.png", "Joint 5: breakaway swivel between rope and train", "It parts at 2.5 kN so a jam cannot overload the rope or the ring", elev=24, azim=-60)
     # 6 duct spigot in the crown saddles (short layout)
-    C = build_components(P, short=True, hangers=False)
+    C = GC(option_a(P, True, False, False))
     Lp = P["short"]["Lp"]
     c = at(P, P["duct_r"], P["duct_th"], 0)
     r6 = (Lp - 420, Lp + 60, c[1] - 140, c[1] + 140, c[2] - 140, c[2] + 160)
@@ -289,7 +331,6 @@ def steps():
         bv.step(done, new, OUT / f"step-{n:02d}.png", title, sub, context=context, label_done=False, size=size, elev=elev, azim=azim)
 
     yA, yB = P["winch_y"]
-    from model import trestle as trestle_shape
     tA = part("Trestle A", trestle_shape(P, 0.0, yA), "trestles")
     tB = part("Trestle B", trestle_shape(P, 0.0, yB), "trestles")
     ties = part("Cross ties (4)", ST["ties"], "ties")
@@ -322,23 +363,23 @@ def steps():
          "Spacer, sheave, keeper washer and R-clip; the sheave turns by hand", context=[pipe])
     shot([bot, sp, sm, cr, jk] + shk, [mv(part("Cover and kneeling plate", R["cover"], "cover"), (0, 0, 250))],
          "Step 9: cover over the sheave", "Four M8 screws into the posts, open side toward the portal", context=[pipe])
-    C = build_components(P, short=True, hangers=True)
+    C = GC(option_a(P, True, False, True))
     Lp = P["short"]["Lp"]
     win6 = (Lp - 1500, Lp + 600, -500, 500, -10, 900)
     pipe6 = Part("Rescue pipe (cut open)", crop(context_shapes(P, Lp, P["short"]["x_stand"], cut=True)["pipe"], *win6), COL["pipe"])
     face = [Part(C[k].name, crop(C[k].shape, *win6), "#D1D5DB") for k in ("bottom", "side_p", "side_m", "crown", "jacks", "sheave", "cover")]
     shot(face, [part("Duct outlet spigot", C["spigot"].shape, "spigot", (-400, 0, 0)),
-                part("Layflat duct on magnet hangers", crop(C["duct"].shape + C["hangers"].shape, *win6), "duct", (-600, 0, 0))],
+                part("Layflat duct on magnet hangers", crop(U(C["duct"].shape, C["hangers"].shape), *win6), "duct", (-600, 0, 0))],
          "Step 10: duct spigot into its saddles, duct over it", "Two band clamps; hang the duct every 2.5 m on magnet hangers", context=[pipe6])
     shot(face + [Part("spigot", C["spigot"].shape, "#D1D5DB")],
          [part("Magnetic work lamp", C["lamp"].shape, "lamp", (0, 0, -200)), part("Signal cable and telephone", crop(C["cable"].shape, *win6), "cable", (-500, 0, 0))],
          "Step 11: lamp inside the hood; signal line to the face", "Telephone hung inside the ring rear; lamp aimed at the face", context=[pipe6])
-    trays = [part(f"Sledge {k + 1}", Pos(-1150.0 * k, 0, 0) * (SL["tray"] + SL["lugs"] + SL["runners"]), "sledges") for k in range(4)]
+    trays = [part(f"Sledge {k + 1}", Pos(-1150.0 * k, 0, 0) * (U(SL["sledges"], SL["runners"])), "sledges") for k in range(4)]
     links = [part("Links", link_between(P, -1150.0 * (k + 1) + 1000 + 30, -1150.0 * k - 30), "links") for k in range(3)]
     sw1, _ = swivel(P, 1030.0, +1)
     sw2, _ = swivel(P, -1150.0 * 3 - 30, -1)
-    shot(trays, [Part("Connecting links (3)", links[0].shape + links[1].shape + links[2].shape, COL["links"], None, (0, 0, 250)),
-                 part("Breakaway swivels (2)", sw1 + sw2, "swivels", (0, 0, 250))],
+    shot(trays, [Part("Connecting links (3)", U(links[0].shape, links[1].shape, links[2].shape), COL["links"], None, (0, 0, 250)),
+                 part("Breakaway swivels (2)", U(sw1, sw2), "swivels", (0, 0, 250))],
          "Step 12: make up the train", "Four sledges, three links and a breakaway swivel at each end", size=(9, 5.5), elev=28)
     win13 = (Lp - 1800, Lp + 600, -500, 500, -10, 900)
     done13 = [Part(C[k].name, crop(C[k].shape, *win13), "#D1D5DB") for k in ("bottom", "side_p", "side_m", "sheave", "sledges", "links", "swivels")]
@@ -346,9 +387,9 @@ def steps():
          "Step 13: reeve the tail rope round the face sheave", "From the train's face end round the sheave, back along the left of the floor to winch B",
          context=[Part("pipe", crop(context_shapes(P, Lp, P["short"]["x_stand"], cut=True)["pipe"], win13[0], win13[1], -500, 500, -10, 300), COL["pipe"])],
          elev=62, azim=-125)
-    shot([part("Stretcher (rolled)", CP["stretcher"], "stretcher")], [part("Spreader bar and bridle", CP["spreader"] + CP["bridle"], "spreader", (400, 0, 0))],
+    shot([part("Stretcher (rolled)", CP["stretcher"], "stretcher")], [part("Spreader bar and bridle", U(CP["spreader"], CP["bridle"]), "spreader", (400, 0, 0))],
          "Step 14: casualty stretcher ready at the portal", "Spreader bar on the head grommets; swivels clip to its eye in place of the train", size=(8, 5))
-    dr = part("Drills on winch bits (2)", ST["drills"] + ST["bits"], "drills")
+    dr = part("Drills on winch bits (2)", U(ST["drills"], ST["bits"]), "drills")
     shot([tA, tB, ties, win, grd], [mv(dr, (0, 0, 300))], "Step 15: drills on the winch sockets for hauling",
          "High gear only; clutch about 35 N m; handles stowed for hand cranking")
     print("steps", n)

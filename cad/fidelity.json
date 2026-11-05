@@ -1,0 +1,47 @@
+{
+ "level": "D3",
+ "stage": "P3",
+ "hash": "17a0089d0c12ac18",
+ "options": {
+  "A": {
+   "title": "Rope shuttle of sledges",
+   "parts": 488,
+   "made_or_bought": 153,
+   "fasteners": 289,
+   "welds": 46,
+   "bare": [],
+   "bare_share": 0.0,
+   "interference": [],
+   "mass_kg": 346.1,
+   "step_files": 153
+  },
+  "B": {
+   "title": "Rail tramway",
+   "parts": 606,
+   "made_or_bought": 215,
+   "fasteners": 329,
+   "welds": 62,
+   "bare": [],
+   "bare_share": 0.0,
+   "interference": [],
+   "mass_kg": 372.2,
+   "step_files": 0
+  },
+  "C": {
+   "title": "Pneumatic extraction",
+   "parts": 243,
+   "made_or_bought": 76,
+   "fasteners": 154,
+   "welds": 13,
+   "bare": [],
+   "bare_share": 0.0,
+   "interference": [],
+   "mass_kg": 298.0,
+   "step_files": 0
+  }
+ },
+ "failures": [],
+ "warnings": [],
+ "passed": true,
+ "seconds": 296.3
+}

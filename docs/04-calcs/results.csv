@@ -1,13 +1,16 @@
 id,value,target,status
 R1,all parts pass a 776 mm circle in a 780 mm pipe; 600 mm variant waits for the co-design partner (decision 26C),800 mm pipe; 600 mm stretch,"met (800); open (600 stretch, decision 26C)"
 R2,"5.5 MPa, 0.01 mm at 5 kN","5 kN, no head contact",met on paper
-R3,0.42 m3/h with the portal drill drive (0.22 by hand),"1 m3/h, two-person crew",not met
-R4,92 N high gear starting,under 200 N,met on paper
+R3,0.42 m3/h with the portal drill drive (0.22 by hand),"at least 0.4 m3/h, faster than the face makes spoil (restated 2026-10-04, decision 4A)",met as restated
+R4,93 N high gear starting,under 200 N,met on paper
 R5,15.1 m3/min at the face,1 m3/min,met on paper
 R6,3.5 min by hand hauling,under 5 min,met on paper
 R7,1.6 h estimated,2 h,met on paper (estimate)
 R8,"battery lamps, gas monitors and sound-powered telephones only",no power in the pipe,met by design
 R9,"250 round trips; ropes inspected each shift, spare set carried",72 h,managed by inspection and spares (decision 25A); endurance trial at TRL 4
-R10,heaviest package 34.8 kg,40 kg,met
+R10,heaviest package 37.7 kg,40 kg,met
 R11,release 2.5 kN; rope factor 6.5,2.5 kN limit,met by design
 R12,two four-gas monitors in the kit,continuous monitoring,met by design
+PR-013,"USD 10,804.00 of priced parts, USD 5,804.00 over the target","USD 5,000 value-engineering target",over target
+PR-014,"12 of the 34 BOM lines are made parts, all from stock section, bar and sheet; the rest are catalogue items","workshop-made, no casting",met by design
+PR-015,one sound-powered telephone line with a pull-cord bell (BOM line 24); no battery in the pipe,face to portal signals,met by design

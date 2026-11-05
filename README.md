@@ -4,13 +4,13 @@
 
 ![TRL 3](https://img.shields.io/badge/TRL-3%20of%209-0F766E) ![Hardware: CERN-OHL-S-2.0](https://img.shields.io/badge/hardware-CERN--OHL--S--2.0-111827) ![Software: MIT](https://img.shields.io/badge/software-MIT-111827) [![REUSE compliant](https://github.com/BoujeeEnjinia1701/sleevedrift/actions/workflows/reuse.yml/badge.svg)](https://github.com/BoujeeEnjinia1701/sleevedrift/actions/workflows/reuse.yml) [![Archived in Software Heritage](https://archive.softwareheritage.org/badge/origin/https://github.com/BoujeeEnjinia1701/sleevedrift/)](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/BoujeeEnjinia1701/sleevedrift) [![DOI](https://zenodo.org/badge/{"message":"GitHub access to this repository is not enabled for this session. Use add_repo to request access. If add_repo answers that read access is already available and you need GitHub API or write access, call add_repo again with access:\"push\" to attach the repository with credentials.","documentation_url":"https://docs.anthropic.com/en/docs/claude-code/github-actions"}.svg)](https://zenodo.org/badge/latestdoi/{"message":"GitHub access to this repository is not enabled for this session. Use add_repo to request access. If add_repo answers that read access is already available and you need GitHub API or write access, call add_repo again with access:\"push\" to attach the repository with credentials.","documentation_url":"https://docs.anthropic.com/en/docs/claude-code/github-actions"})
 
-**Area:** Situational field hardware · **TRL:** 3 of 9 (proof of concept on paper; constructable design) · **Value-engineering target:** USD 5,000; estimated parts cost USD 9,867.50 · **Difficulty:** 4 of 5
+**Area:** Situational field hardware · **TRL:** 3 of 9 (proof of concept on paper; constructable design) · **Stage:** P3 · **Value-engineering target:** USD 5,000; estimated parts cost USD 10,804.00 · **Difficulty:** 4 of 5
 
 Equips hand-mining crews inside rescue pipes with a hooded ring, rope-loop sledges and air.
 
 ## Concept rationale
 
-SleeveDrift is a set of equipment for hand-mining crews working inside an 800 mm rescue pipe. At the face, a hooded cutting ring sits in the pipe mouth: its edge helps the pipe cut into the debris and its hood shelters the digger's head and shoulders from falling material. Behind the digger, an endless rope loop runs the length of the pipe with small sledges clipped to it; the crew at the portal hauls the loop and the sledges carry spoil out and empty sledges back. An air line from a blower at the portal delivers fresh air to the face.
+SleeveDrift is a set of equipment for hand-mining crews working inside an 800 mm rescue pipe. At the face, a hooded cutting ring sits in the pipe mouth: its edge helps the pipe cut into the debris and its hood shelters the digger's head and shoulders from falling material. Behind the digger, a train of low sledges shuttles along the pipe floor between a pull rope and a tail rope that turns round a sheave on the ring; the crew at the portal hauls the ropes with two winches and the sledges carry spoil out and empty sledges back. An air line from a blower at the portal delivers fresh air to the face.
 
 It formalises what worked at Silkyara: one person digs, a second collects the rubble and a third loads a trolley that is pulled out ([NewsBytes, 2023](https://www.newsbytesapp.com/news/india/uttarkashi-what-is-rat-hole-mining-used-in-collapsed-silkyara-tunnel/story)). Designing and testing that equipment in advance, openly, means the next crew does not have to improvise under pressure. It is published as an open engineering reference, not certified rescue or mining equipment.
 
@@ -55,9 +55,21 @@ Full problem statement: [docs/01-problem.md](docs/01-problem.md)
 
 Equipment for hand-mining crews working inside an 800 mm rescue pipe during a tunnel collapse. A hooded cutting ring of four bolted steel segments sits in the pipe mouth, held by jacking screws, with its crown running on as a hood over the digger. A train of four low sledges shuttles spoil along the pipe floor between a pull rope and a tail rope that turns round a sheave on the ring; two self-tailing winches at the portal haul it, and breakaway swivels limit the rope to 2.5 kN. A blower at the portal sends about 15 m³/min of fresh air down a layflat duct to a spigot under the hood.
 
-On paper every requirement is met except spoil haulage: by hand the train moves about 0.22 m³ an hour against a target of 1 m³, and rope wear over a 72-hour shift is at risk. The options are with Amish in [docs/06-design-decisions.md](docs/06-design-decisions.md).
+On paper thirteen of the fifteen product requirements are met or met by design, shift durability is managed by rope inspection and a spare set until the endurance trial (PR-009), and one is not met: cost (PR-013): the priced parts come to USD 10,804.00 against the USD 5,000 value-engineering target. Spoil haulage is met as restated on 2026-10-04: about 0.42 m³ an hour with a drill on each winch, against at least 0.4 m³ an hour and a hand-dug face rate of about 0.27. Two other working principles were scored beside this design: a rail tramway (B) and pneumatic extraction (C). The rope shuttle (A) scores 175 of 195, B 164 and C 148; A and B are within 10 %, so both are with Amish in [docs/06-design-decisions.md](docs/06-design-decisions.md) and nothing is chosen yet.
 
 Full design precis: [docs/02-concept.md](docs/02-concept.md) · Requirements: [docs/03-requirements.md](docs/03-requirements.md) · Calculations: [docs/04-calcs/01-sizing.md](docs/04-calcs/01-sizing.md) · Prototype build plan: [docs/05-build-plan.md](docs/05-build-plan.md) · Design decisions: [docs/06-design-decisions.md](docs/06-design-decisions.md) · [3D viewer](media/viewer.html)
+
+## Pipeline documents (kit 1.9.1)
+
+| Document | What it holds |
+| --- | --- |
+| [STEM check](docs/01b-stem-check.md) (SVD-STM-001) | 22 claims checked against known science: 17 within, 5 plausible, none failing; one failure fixed (option C blower) and an independent review |
+| [Concept options](docs/02a-concept-options.md) (SVD-OPT-001) | Three options with different working principles, scored against the user requirements |
+| [User requirements](docs/03a-user-requirements.md) and [product requirements](docs/03-requirements.md) (SVD-URS-001, SVD-PRS-001) | UR-001 to UR-015 and PR-001 to PR-015, each traced; matrix in [docs/03b-traceability.md](docs/03b-traceability.md) |
+| [Regulatory](docs/07-regulatory.md), [feasibility](docs/08-feasibility.md), [risk](docs/09-risk.md), [market](docs/10-market.md), [plan](docs/11-plan.md) | SVD-REG-001, SVD-FEA-001, SVD-RSK-001, SVD-MKT-001, SVD-PLN-001 |
+| [Concept selection](docs/decisions/0005-concept-selection.md) (SVD-DDR-005) | Proposed, awaiting Amish |
+| [CAD fidelity](cad/fidelity.json) | Every option modelled at D3 in `cad/src/model.py`; STEP per part and per assembly in `cad/step/` |
+
 
 ![Concept render, layout shortened](media/hero.png)
 
@@ -102,7 +114,7 @@ The [prototype build plan](docs/05-build-plan.md) (SVD-BLD-001) takes a capable 
 | --- | --- |
 | `docs/` | Problem, concept, requirements, calculations and design decisions |
 | `cad/src/` | build123d Python source, the source of truth for all geometry |
-| `cad/step/`, `cad/stl/` | Exported models for FreeCAD, other CAD tools and printing |
+| `cad/step/`, `cad/stl/` | One STEP file per made and bought part of the chosen option, an assembly STEP per option, and an STL of the chosen design |
 | `cad/drawings/` | 2D sketches and dimensioned drawings |
 | `bom/` | Bill of materials |
 | `electronics/` | KiCad schematics and PCB layouts |

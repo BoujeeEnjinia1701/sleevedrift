@@ -164,6 +164,7 @@ say("C10", f"Trestle: rope {P['rope_hz']:.0f} mm up, sling eye {H + 80:.0f} mm u
            f"{A['breakaway'] * (P['rope_hz'] - H - 80) / 1000:.0f} N m against {M['trestle'] * g * P['trestle'][0] / 2000:.0f} N m from the trestle's weight")
 
 # ------------------------------------------------------------------ D. output (R3)
+R3_TARGET = 0.4        # m3/h, restated by Amish on 2026-10-04 (decision 4A, SVD-DDR-004); the scaffold target was 1 m3/h
 def cycle(v_load, v_empty, n_sl=P["n_sledges"], unload_per=A["unload_min_per"], load_rate=A["load_Lpm"]):
     t_out = Lp / v_load
     t_in = Lp / v_empty
@@ -180,7 +181,7 @@ q_hand = VL / 1000 / (c_hand[4] / 60)
 face = math.pi / 4 * 0.8 ** 2 * A["face_adv_m"] * A["bulk"] / A["face_hours"]
 say("D1", f"Hand: loaded {v_l:.1f} m/min ({A['P_crank']:.0f} W at the handle), empty {v_e:.1f} m/min (handle at {A['rpm_max']:.0f} rpm)")
 say("D2", f"Hand cycle: out {c_hand[0]:.1f}, unload {c_hand[2]:.1f}, in {c_hand[1]:.1f}, load {c_hand[3]:.1f}, signals {A['signal_min']:.1f}: "
-          f"{c_hand[4]:.1f} min for {VL:.0f} L = {q_hand:.2f} m3/h (R3 not met)")
+          f"{c_hand[4]:.1f} min for {VL:.0f} L = {q_hand:.2f} m3/h (below the face rate and the R3 target of 0.4 m3/h)")
 say("D3", f"Silkyara face rate for comparison: about {A['face_adv_m']:.0f} m in {A['face_hours']:.0f} h through 0.8 m, bulked x {A['bulk']}: "
           f"{face:.2f} m3/h of loose spoil")
 v_d = per_rev * A["drill_rpm"]
@@ -188,7 +189,7 @@ c_b = cycle(v_d, v_d)
 q_b = VL / 1000 / (c_b[4] / 60)
 say("D4", f"As designed (decision 24B): right-angle drill with a winch bit on each winch at {A['drill_rpm']:.0f} rpm, high gear: {v_d:.1f} m/min, "
           f"{F_load * v_d / 60:.0f} W at the rope loaded; cycle: out {c_b[0]:.1f}, unload {c_b[2]:.1f}, in {c_b[1]:.1f}, load {c_b[3]:.1f}, "
-          f"signals {A['signal_min']:.1f} = {c_b[4]:.1f} min = {q_b:.2f} m3/h (R3 not met; faster than the face [D3])")
+          f"signals {A['signal_min']:.1f} = {c_b[4]:.1f} min = {q_b:.2f} m3/h (R3 restated 2026-10-04 as at least {R3_TARGET:.1f} m3/h and faster than the face: {'met' if q_b >= R3_TARGET else 'not met'} [D3])")
 n6 = 6
 m6 = (D["sledge_L"] * n6 * A["rho_spoil"] + M["sledge"] * n6 + 5) * g * A["mu_k"] + F_rope + F_back
 c_c = cycle(v_d, v_d, n_sl=n6, unload_per=0.5, load_rate=60.0)
@@ -252,7 +253,7 @@ say("G2", f"Total {tot} min = {tot / 60:.1f} h on the critical path; duct and ca
 
 # ------------------------------------------------------------------ H. durability (R9)
 cyc = 72 * 60 / c_b[4]
-km = cyc * 2 * Lp * 2 / 1000
+km = cyc * 2 * Lp / 1000
 say("H1", f"72 h at the drill rate: {cyc:.0f} round trips; each metre of rope in the pipe drags about {km:.0f} km over the gritty floor")
 wear = cyc * 2 * Lp / 1000 * 0.1
 say("H2", f"Sledge runners slide {cyc * 2 * Lp / 1000:.0f} km: about {wear:.1f} mm of 10 mm worn at 0.1 mm/km (UHMW-PE in sandy slurry, assumed)")
@@ -265,17 +266,18 @@ cases = [("Crown segment", M["crown"]), ("Side segments (2)", 2 * M["side_p"]),
          ("Bottom segment, sheave, spacer and cover", M["bottom"] + M["sheave"] + M["sheave_hw"] + M["cover"]),
          ("Winch trestle (each)", M["trestle"]), ("Winches (2, about 9 kg each), handles, ties", 18 + 4 * M["ties"] + 2),
          ("Sledges (4, nested), links, swivels", 4 * M["sledge"] + 5), ("Ropes (215 m) and spare set (215 m)", 2 * (215 * P["rope_kgm"] + 1)),
-         ("Drill drive: 2 drills, 2 bits, 2 spare batteries, charger, 2 drum guards",
-          2 * A["m_drill"] + 2 * A["m_bit"] + 2 * A["m_batt"] + A["m_charger"] + 2 * M["guard"]),
+         ("Drill drive: 2 drills, 2 bits, 2 spare batteries, 2 chargers, 2 drum guards",
+          2 * A["m_drill"] + 2 * A["m_bit"] + 2 * A["m_batt"] + 2 * A["m_charger"] + 2 * M["guard"]),
          ("Blower (about 20 kg)", 20.0), ("Duct (65 m at 0.4 kg/m)", 26.0),
          ("Stretcher, spreader, monitors, phones, lamps", 9 + M["spreader"] + 2 + 12 + 4), ("Tools, spigot, jacks, bolts, hangers", 14 + M["spigot"] + M["jacks"] + M["joint_bolts"] + 6)]
 heavy = max(cases, key=lambda c: c[1])
 say("I1", "Packages (kg): " + "; ".join(f"{n} {m:.1f}" for n, m in cases))
-say("I2", f"Kit {sum(m for _, m in cases):.0f} kg in {len(cases) + 1} packages; heaviest {heavy[0]} {heavy[1]:.1f} kg (R10 met)")
+say("I2", f"Kit {sum(m for _, m in cases) + M['trestle']:.0f} kg in {len(cases) + 1} packages (the second trestle counted); heaviest {heavy[0]} {heavy[1]:.1f} kg (R10 met)")
 
 # ------------------------------------------------------------------ J. cost
 rows = list(csv.DictReader((ROOT / "bom" / "bom.csv").open()))
 cost = sum(float(r["qty"]) * float(r["unit_cost_usd"]) for r in rows)
+n_make = sum(1 for r in rows if r["make_buy"] == "make")
 target = float(re.search(r"budget_usd:\s*([\d.]+)", (ROOT / "project.yaml").read_text()).group(1))
 top = sorted(rows, key=lambda r: -float(r["qty"]) * float(r["unit_cost_usd"]))[:5]
 say("J1", f"Value-engineering target: USD {target:,.0f}. Estimated cost of the constructable design: USD {cost:,.2f} "
@@ -286,7 +288,7 @@ say("J2", "Largest lines: " + "; ".join(f"{r['item'].split(' ', 1)[1]} USD {floa
 R = [
     ("R1", f"all parts pass a {2 * env:.0f} mm circle in a {pid:.0f} mm pipe; 600 mm variant waits for the co-design partner (decision 26C)", "800 mm pipe; 600 mm stretch", "met (800); open (600 stretch, decision 26C)"),
     ("R2", f"{sig / 1e6:.1f} MPa, {delta * 1000:.2f} mm at 5 kN", "5 kN, no head contact", "met on paper"),
-    ("R3", f"{q_b:.2f} m3/h with the portal drill drive ({q_hand:.2f} by hand)", "1 m3/h, two-person crew", "not met"),
+    ("R3", f"{q_b:.2f} m3/h with the portal drill drive ({q_hand:.2f} by hand)", f"at least {R3_TARGET:.1f} m3/h, faster than the face makes spoil (restated 2026-10-04, decision 4A)", "met as restated" if q_b >= R3_TARGET else "not met"),
     ("R4", f"{h(F_start, A['pr_high']):.0f} N high gear starting", "under 200 N", "met on paper"),
     ("R5", f"{Qf:.1f} m3/min at the face", "1 m3/min", "met on paper"),
     ("R6", f"{tc:.1f} min by hand hauling", "under 5 min", "met on paper"),
@@ -296,6 +298,9 @@ R = [
     ("R10", f"heaviest package {heavy[1]:.1f} kg", "40 kg", "met"),
     ("R11", f"release {A['breakaway'] / 1000:.1f} kN; rope factor {fos_rope:.1f}", "2.5 kN limit", "met by design"),
     ("R12", "two four-gas monitors in the kit", "continuous monitoring", "met by design"),
+    ("PR-013", f"USD {cost:,.2f} of priced parts, USD {abs(cost - target):,.2f} {'over' if cost > target else 'under'} the target", f"USD {target:,.0f} value-engineering target", "over target" if cost > target else "met"),
+    ("PR-014", f"{n_make} of the {len(rows)} BOM lines are made parts, all from stock section, bar and sheet; the rest are catalogue items", "workshop-made, no casting", "met by design"),
+    ("PR-015", "one sound-powered telephone line with a pull-cord bell (BOM line 24); no battery in the pipe", "face to portal signals", "met by design"),
 ]
 with (ROOT / "docs" / "04-calcs" / "results.csv").open("w", newline="") as f:
     wtr = csv.writer(f)

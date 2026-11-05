@@ -1,9 +1,9 @@
-"""SleeveDrift drawing sheets, Rev P2 (TRL 3, constructable design SVD-DDR-002).
+"""SleeveDrift drawing sheets, Rev P4 (TRL 3, constructable design SVD-DDR-002, detailed model of kit 1.9).
 
 Run from the repo root:  python cad/src/sheets.py
 Writes cad/drawings/SVD-DWG-001 (hooded cutting ring and face sheave, general arrangement) and
 SVD-DWG-002 (portal haul station, general arrangement) as SVG, PDF and PNG from
-cad/src/model.py with .kit/drawing.py. Overall sizes are dimensioned by the kit; main dimensions
+cad/src/model.py (the kit 1.9 detailed parts, every bolt, weld and pin) with .kit/drawing.py. Overall sizes are dimensioned by the kit; main dimensions
 and interfaces are listed in the notes, taken from PARAMS and derived(). The concept blueprint
 in media/ is SVD-DWG-010; the making sketches for the build plan are SVD-DWG-101 onward
 (cad/src/build_plan_media.py).
@@ -16,12 +16,15 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path[:0] = [str(ROOT / ".kit"), str(ROOT / "cad" / "src")]
 from build123d import Compound  # noqa: E402
 from drawing import Sheet  # noqa: E402
-from model import PARAMS as P, derived, ring_parts, station_parts, masses  # noqa: E402
+from model import PARAMS as P, derived, face_end, station_parts, masses, grouped  # noqa: E402
 
-DATE = "2026-10-03"
+DATE = "2026-11-02"
 REVS = [("P1", "Preliminary GA for TRL 3 (from cad/src/model.py)", DATE, "AC"),
         ("P2", "SVD-DDR-002: design for construction", DATE, "AC")]
-REVS2 = REVS + [("P3", "SVD-DDR-003: drill drive on each winch, drum guards", DATE, "AC")]
+REVS2 = REVS + [("P3", "SVD-DDR-003: drill drive on each winch, drum guards", "2026-10-03", "AC")]
+REVS = REVS + [("P4", "Kit 1.9.1: redrawn from the detailed model (bolts, welds, pins)", DATE, "AC")]
+REVS2 = REVS2 + [("P4", "Kit 1.9.1: redrawn from the detailed model (bolts, welds, pins)", DATE, "AC")]
+TILT = 0.006      # degrees; a view exactly on an axis can stall the hidden-line projection of many solids
 
 
 def safe_project_views(part, workdir, line_weight=0.35):
@@ -32,8 +35,10 @@ def safe_project_views(part, workdir, line_weight=0.35):
     bb = part.bounding_box()
     c = bb.center()
     d = max(bb.size.X, bb.size.Y, bb.size.Z) * 10
-    setups = {"front": ((c.X, c.Y - d, c.Z), (0, 0, 1)), "top": ((c.X, c.Y, c.Z + d), (0, 1, 0)),
-              "right": ((c.X + d, c.Y, c.Z), (0, 0, 1)), "iso": ((c.X + d, c.Y - d, c.Z + d * 0.8), (0, 0, 1))}
+    import math
+    k = math.tan(math.radians(TILT))
+    setups = {"front": ((c.X + d * k, c.Y - d, c.Z + d * k), (0, 0, 1)), "top": ((c.X + d * k, c.Y + d * k, c.Z + d), (0, 1, 0)),
+              "right": ((c.X + d, c.Y + d * k, c.Z + d * k), (0, 0, 1)), "iso": ((c.X + d, c.Y - d, c.Z + d * 0.8), (0, 0, 1))}
     out = {}
     for name, (origin, up) in setups.items():
         visible, hidden = part.project_to_viewport(origin, up, (c.X, c.Y, c.Z))
@@ -53,12 +58,11 @@ def safe_project_views(part, workdir, line_weight=0.35):
 
 
 def ring_sheet(D, M):
-    R = ring_parts(P, 0.0)
-    keys = ["crown", "side_p", "side_m", "bottom", "joint_bolts", "jacks", "sheave", "sheave_hw", "cover", "spigot"]
+    R = face_end(P, 0.0)
     work = ROOT / "cad" / "drawings" / "_views1"
-    views = safe_project_views(Compound([R[k] for k in keys]), work, line_weight=0.3)
+    views = safe_project_views(Compound([p["shape"] for p in R if p["group"] != "lamp"]), work, line_weight=0.3)
     s = Sheet(project="SleeveDrift", title="Hooded cutting ring and face sheave: general arrangement", dwg_no="SVD-DWG-001",
-              rev="P2", author="Amish Chadha", date=DATE, scale=None, theme="technical",
+              rev="P4", author="Amish Chadha", date=DATE, scale=None, theme="technical",
               material="5 mm S355 rolled plate segments, bought sheave and fasteners per bom/bom.csv. PRELIMINARY, NOT FOR FABRICATION",
               revisions=REVS)
     s.add_ortho(views)
@@ -84,11 +88,11 @@ def ring_sheet(D, M):
 
 
 def station_sheet(D, M):
-    st = station_parts(P, 0.0)
+    st = grouped(station_parts(P, 0.0))
     work = ROOT / "cad" / "drawings" / "_views2"
     views = safe_project_views(Compound([st["trestles"], st["ties"], st["winches"], st["bits"], st["drills"], st["guards"]]),
                                work, line_weight=0.3)
-    s = Sheet(project="SleeveDrift", title="Portal haul station: general arrangement", dwg_no="SVD-DWG-002", rev="P3",
+    s = Sheet(project="SleeveDrift", title="Portal haul station: general arrangement", dwg_no="SVD-DWG-002", rev="P4",
               author="Amish Chadha", date=DATE, scale=None, theme="technical",
               material="40 x 40 x 3 SHS trestles, 10 mm plate; bought winches and drills per bom/bom.csv. PRELIMINARY, NOT FOR FABRICATION",
               revisions=REVS2)

@@ -3,9 +3,9 @@ doc_id: SVD-PRB-001
 title: SleeveDrift problem statement
 project: SleeveDrift
 doc_type: Problem statement
-version: "0.2"
+version: "0.3"
 status: Draft
-date: '2026-10-03'
+date: '2026-11-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -17,6 +17,10 @@ revisions:
   date: '2026-10-03'
   author: Amish Chadha
   change: TRL 2 and 3 update; safety note, first co-design candidate, answers to the open questions and questions for the first trials
+- version: "0.3"
+  date: '2026-11-02'
+  author: Amish Chadha
+  change: Kit 1.9.1 upgrade; Users and needs (Table 1) and Stakeholders (Table 2) tables, from which the user requirements in SVD-URS-001 are drawn
 ---
 
 # SleeveDrift problem statement
@@ -33,12 +37,27 @@ The standard approach, auger boring, pushes pipe with a machine and failed at Si
 
 ## Users and context
 
-| User | Need | Context |
+Table 1. Users and needs.
+
+| User type | Goals and needs | Typical use scenario | Pain points and challenges |
+| --- | --- | --- | --- |
+| Hand-mining rescue crews | Dig at the face with head protection, clear spoil quickly and breathe fresh air; be brought out fast if hurt | Crawling or kneeling inside an 800 mm pipe tens of metres long, three people at a time in eight-hour shifts | Fall of debris on the head, spoil that piles up behind them, bad air, no way to call for help or to be pulled out |
+| Portal crews | Haul spoil out and send tools and supplies in without entering the pipe; hear the face | At the pipe mouth inside the tunnel | Hauling a loaded trolley by hand along tens of metres; rope abrasion; keeping the haul in step with the dig |
+| Rescue commanders (national and state disaster response forces, project engineers) | A kit that can be staged at site and deployed in hours, with nothing powered or untested in the pipe | Multi-agency rescue with machines and hand crews | Equipment that arrives late, is heavy or has to be improvised on the day |
+| Tunnel contractors | Equipment to hold on site as part of emergency planning, affordable to hold and mendable by a local workshop | Road, rail and hydropower tunnel projects | Cost of standby kit; no stock of purpose-built rescue gear |
+
+## Stakeholders
+
+Table 2. Stakeholders.
+
+| Stakeholder group | Role or interest | Engagement needed |
 | --- | --- | --- |
-| Hand-mining rescue crews | Dig at the face with head protection, clear spoil quickly and breathe fresh air | Crawling or kneeling inside an 800 mm pipe tens of metres long |
-| Portal crews | Haul spoil out and send tools and supplies in without entering the pipe | At the pipe mouth inside the tunnel |
-| Rescue commanders (national and state disaster response forces, project engineers) | A kit that can be staged at site and deployed in hours | Multi-agency rescue with machines and hand crews |
-| Tunnel contractors | Equipment to hold on site as part of emergency planning | Road, rail and hydropower tunnel projects |
+| National and state disaster response forces (first candidate: India's National Disaster Response Force) | Would hold and train with the kit; set the rules for rescue work | Co-design partner: pipe sizes held, signal code, stop rules, where the kit is stored |
+| Experienced hand miners (the Jhansi miners at Silkyara) | Know the three-person method and what the pipe is like inside | Walk through the method at the face before any trial |
+| Tunnel contractors and project engineers | Own the pipes, the site and the emergency plan | Confirm pipe bore, wall and weld beads; hold the kit |
+| Local steel workshops | Make the made parts from stock section and plate | Review the build plan (SVD-BLD-001) for what they can make |
+| Regulators and standards bodies (confined space, machinery, rope and gas monitoring) | Set the rules the kit must be tested against | Check the register SVD-REG-001; nothing is certified |
+| Test rigs and trial partners (CalRig, HatchSide as first candidates) | Hood test, proof loads, air and gas rules | Agree test plans at TRL 4, not part of this repo yet |
 
 ## Operating environment
 

@@ -3,9 +3,9 @@ doc_id: SVD-DEC-001
 title: SleeveDrift design decisions register
 project: SleeveDrift
 doc_type: Design decisions register
-version: "0.3"
+version: "0.4"
 status: Draft
-date: '2026-10-04'
+date: '2026-11-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -21,6 +21,10 @@ revisions:
   date: '2026-10-04'
   author: Amish Chadha
   change: "Open decision 1 (R3 target) decided by Amish (round-3 decision 4A, SVD-DDR-004) and moved to Decisions made; no open decisions"
+- version: "0.4"
+  date: '2026-11-02'
+  author: Amish Chadha
+  change: "Kit 1.9.1 upgrade: five open decisions proposed (concept A or B, cost target, jacking screw length, casualty rope load, PR-005 target); D1 (option C blower) recorded as made under the standing instruction of 2026-10-23; D2 lists the CAD detailing choices for review"
 ---
 
 # SleeveDrift design decisions register
@@ -31,7 +35,15 @@ Every design decision still to be made, and every decision made, in one place. E
 
 ## Open decisions
 
-None. The three items of 2026-10-03 and the R3 restatement (decided 2026-10-04) are all under Decisions made.
+*Proposed, awaiting Amish. Nothing below is decided.*
+
+| # | Decision needed | Options | Recommendation | Affects in the build | Source |
+| --- | --- | --- | --- | --- | --- |
+| 1 | Which concept to carry forward | A: rope shuttle of sledges (current design, score 175 of 195). B: rail tramway (164). C: pneumatic extraction (148) | Both A and B go to Amish with no pick, because they are within 10 % (6.3 %); A stays the baseline until decided. C is not recommended | Everything if B is chosen: PR-003, PR-004 and PR-007 change, and the model, BOM and build plan go to a new TRL 3 pass | SVD-OPT-001, SVD-DDR-005 |
+| 2 | Cost target for PR-013 (USD 5,000 value-engineering target; parts cost USD 10,804.00, USD 5,804.00 over) | A: hold the target and value-engineer. B: restate the target for a rescue kit. C: treat the winches, monitors, telephones, duct and blower as borrowed kit for trials | Option A for the repo (the target is a control target and the registered cost is the priced BOM), with the savings under Value engineering; `budget_usd` is not raised. Note from the independent review: the BOM carries USD 550 for each four-gas monitor, while the quote found for a comparable unit is GBP 776.52 (about USD 1,000) each, so the BOM is probably low; it is not repriced here | PR-013 status; `project.yaml` `budget_usd` stays 5,000 | SVD-PRS-001 PR-013, section Value engineering below |
+| 3 | Jacking screw length and swivel pad size: the BOM (line 5) says M20 x 90 and a 50 x 7 mm pad; the kit 1.9 model draws M20 x 60 and a 50 x 8 mm pad | A: keep the BOM and lengthen the model screw at the next CAD pass. B: shorten the BOM to match the model | Option A: the BOM is the purchase specification and the build plan says M20 x 90; the model is the part to correct. No requirement or mass figure changes | BOM line 5, `cad/src/model.py` face end | docs/REVIEW.md, session 2026-10-24 |
+| 4 | Casualty rope load: the pull rope has a factor of 6.5 on the 2.5 kN release, not the 15:1 of life-safety rope practice (STM S17, found by the independent review) | A: keep the 2.5 kN release for the stretcher and state the factor of 6.5. B: fit a stretcher-only breakaway at 1.0 kN, a factor of 16 on the rope (the starting pull is 519 N). C: a dedicated 42 kN rescue rope | Option B: lowest cost, and 1.0 kN is 1.9 times the starting pull; it changes the overload limit Amish decided (SVD-DDR-001 item 5), so it is not implemented | PR-011; swivel pin for the stretcher; BLD safety stops | SVD-STM-001 S17 |
+| 5 | PR-005 target (at least 1 m3/min at the face): three people digging need about 1.0 to 1.4 m3/min just to hold CO2 below 5,000 ppm, so the target as written leaves no margin (STM S13) | A: keep 1 m3/min. B: restate per person, for example at least 3 m3/min a person (the design delivers 15 m3/min, about 5 a person) | Option B; no design change | PR-005 wording only | SVD-STM-001 S13, independent review |
 
 ## To confirm when parts are bought
 
@@ -81,3 +93,5 @@ Pre-approval quotes: Q1, Amish 2026-10-03: "start with the first 14 repos from t
 | 2026-10-03 | R9: inspect both ropes each shift and carry a spare set (item 25, option A) | Amish, Q3 | SVD-DDR-003 |
 | 2026-10-03 | R1: the 600 mm variant waits for the co-design partner (item 26, option C) | Amish, Q3 | SVD-DDR-003 |
 | 2026-10-04 | R3 (4A): restated as "moves loose spoil faster than the face produces it; at least 0.4 m3/h" (hand-dug faces about 0.27 m3/h); met at 0.42 m3/h | Amish: "For round 3, I agree with all your proposed recommendations" | SVD-DDR-004 |
+| 2026-11-02 | D1. Option C blower: the 2.2 kW fan of the first draft cannot carry 50 mm rubble (it needs about 2.4 kW for 6 mm fines and 17 kW for 50 mm lumps at 1.5 times the terminal velocity); fixed with a 7.5 kW three-phase high-pressure blower on a portal generator and a 12 mm limit on the lumps the crew feeds to the nozzle (the first fix, a 7.5 kW side-channel blower for 50 mm rubble, was refuted by the independent review: it needs about 1,700 m3/h at 7.8 kPa). Keeps the working principle, so it does not go to Amish; option C itself stays proposed, not chosen | Decided under Amish's standing instruction of 2026-10-23 (fix rule) | SVD-STM-001 Table 2, SVD-OPT-001 |
+| 2026-11-02 | D2. CAD detailing choices for the D3 models, none changing a dimension, mass or cost figure: tie collars welded top and bottom only so the bolts and washers stay clear; winch sling pin and eye plate aligned to the hole centre; drill battery hung below the body; option B wagons with an M16 axle and a 19 mm spacer tube; option B rails bolted with M6 into tapped sleepers; option C hose clamps as split bands with a tangent bolt; the contacts of the duct cuffs, the blower spigot and the cyclone inlet box listed in `ALLOWED_CONTACTS` | Implementation detail within the upgrade brief ("keep the design and the numbers"); not a decision under the standing instruction, which covers failed STEM rows; listed for Amish's review | docs/REVIEW.md, session 2026-10-24 |
